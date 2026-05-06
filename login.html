@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Food Share</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="login.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="login-wrapper">
+        <div class="login-image-side">
+            <div class="image-content">
+                <div class="icon-badge">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <h1>Welcome Back</h1>
+                <p>Sign in to continue sharing food and making a difference in your community.</p>
+            </div>
+        </div>
+        <div class="login-form-side">
+            <div class="login-container">
+                <div class="brand-link">
+                    <a href="index.html"><i class="fas fa-arrow-left"></i> FOOD SHARE</a>
+                </div>
+                <h3>Sign In</h3>
+                <p class="login-subtitle">Enter your credentials to access your account</p>
+                <div id="message"></div>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email</label>
+                        <div class="input-icon-wrapper">
+                            <input type="text" class="form-control" id="email" placeholder="Enter your email">
+                            <i class="fas fa-envelope input-icon"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="input-icon-wrapper">
+                            <input type="password" class="form-control" id="password" placeholder="Enter your password">
+                            <i class="fas fa-lock input-icon"></i>
+                        </div>
+                        <div class="forgot-password">
+                            <a href="#">Forgot password?</a>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-success login-btn" id="signin"><span>Sign In</span></button>
+                </form>
+                <div class="signup-link">
+                    Don't have an account? <a href="signup.html">Create one</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script type="module">
+    import { auth } from "./script.js";
+    import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+
+    document.getElementById('signin').addEventListener('click', () => {
+        const email = document.getElementById('email').value
+        const password = document.getElementById('password').value
+        const messageDiv = document.getElementById('message')
+
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                document.getElementById('message').innerHTML = `<div class="alert alert-success" role="alert">
+                                    ✅ Login successful! Redirecting to dashboard...
+                                </div>`
+                setTimeout(() => {
+                    window.location.href = 'post.html'
+                }, 1500)
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                console.log(errorCode);
+
+                if (email == '' && password == '') {
+                    messageDiv.innerHTML = `<div class='alert alert-danger' role='alert'>
+                            ❌ Fill in all inputs
+                        </div>`
+                } else if (errorCode == 'auth/invalid-credential') {
+                    messageDiv.innerHTML = `<div class="alert alert-danger" role="alert">
+                                   ❌ Invalid email or password
+                                </div>`
+                } else if (errorCode == 'auth/too-many-requests') {
+                    messageDiv.innerHTML = `<div class="alert alert-danger" role="alert">
+                    ❌ Too many login attempts. Please try again later
+                </div>`
+                } else if (errorCode == 'auth/invalid-email') {
+                    messageDiv.innerHTML = `<div class="alert alert-danger" role="alert">
+                    ❌ Invalid email format
+                </div>`
+                } else {
+                    messageDiv.innerHTML = `<div class="alert alert-danger" role="alert">
+                    ❌ Login failed: ${error.message}
+                </div>`
+                }
+            })
+    })
+</script>
+
+</html>

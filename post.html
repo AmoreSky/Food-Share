@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Food</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="post-style.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <nav class="navbar bg-body-tertiary">
+        <div class="container">
+            <div class="logo">
+                <img src="images/give-food.png" alt="food share">
+                <a class="navbar-brand">FOOD SHARE</a>
+            </div>
+            <div class="d-flex gap-3" role="search">
+                <a href="dashboard.html" class="btn btn-outline-success"><span>Dashboard</span></a>
+                <a href="postedFoods.html" class="btn btn-outline-success"><span>Posted Foods</span></a>
+                <a href="claimed.html" class="btn btn-outline-success"><span>Claimed Food</span></a>
+                <a href="#" class="btn btn-success" id="signout"><span>Signout</span></a>
+
+            </div>
+        </div>
+    </nav>
+
+    <div id="form-group">
+        <div id="post-loader" class="post-loader hidden">
+            <div class="food-loader-icon">🍽️</div>
+            <p>Sharing your food...</p>
+        </div>
+        <div id="form-content">
+            <h3>Post Food</h3>
+            <img id="image_preview" alt="Preview">
+            <div class="file-label-wrapper">
+                <label for="food_image" class="btn btn-info">Upload image</label>
+                <input type="file" id="food_image" class="d-none" accept="image/*">
+            </div>
+            <div id="messageBox"></div>
+            <input type="text" placeholder="Food Name" id="food_name">
+            <input type="text" placeholder="Quantity" id="quantity">
+            <input type="text" placeholder="Location eg: Bodija, Ibadan" id="location">
+            <input type="number" placeholder="phone number" id="contact">
+            <label for="exp_date">Expiary Date</label>
+            <input type="date" placeholder="Expiary date and time" id="exp_date">
+            <textarea name="" id="notes" placeholder="notes"></textarea>
+            <button id="post" class="btn btn-success">Post Food</button>
+        </div>
+    </div>
+</body>
+<script type="module">
+    import { auth, db, signOut, onAuthStateChanged, collection, addDoc } from "./script.js";
+
+    const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/duxscpwuz/image/upload";
+    const UPLOAD_PRESET = "food_share";
+
+
+    let user;
+
+    function showMessage(text, type) {
+        const messageBox = document.getElementById('messageBox');
+        messageBox.textContent = text;
+        messageBox.className = `show ${type}`;
+        setTimeout(() => {
+            messageBox.classList.remove('show');
+        }, 3500);
+    }
+
+    onAuthStateChanged(auth, (currentUser) => {
+        if (currentUser) {
+            user = currentUser;
+        } else {
+            // Redirect to login if not authenticated
+            window.location.href = "login.html";
+        }
+    });
+
+    document.getElementById('signout').addEventListener('click', () => {
+        signOut(auth).then(() => {
+            setTimeout(() => {
+                window.location.href = 'login.html'
+
+            }, 1500)
+        }).catch((error) => {
+            console.log(error);
+
+        });
+    })
+
+    document.getElementById('food_image').addEventListener('change', () => {
+        const image = document.getElementById('food_image');
+        const preview = document.getElementById('image_preview');
+
+        if (image.files && image.files[0]) {
+            preview.src = URL.createObjectURL(image.files[0]);
+            preview.classList.add('show');
+        } else {
+            preview.classList.remove('show');
+        }
+    });
+
+    document.getElementById('post').addEventListener('click', async () => {
+        const postBtn = document.getElementById('post');
+        const loader = document.getElementById('post-loader');
+        const formContent = document.getElementById('form-content');
+
+        // Show loader and hide form content
+        loader.classList.remove('hidden');
+        formContent.classList.add('hidden');
+
+        const image = document.getElementById('food_image');
+        const food_name = document.getElementById('food_name').value
+        const quantity = document.getElementById('quantity').value
+        const exp_date = document.getElementById('exp_date').value
+        const location = document.getElementById('location').value
+        const contact = document.getElementById('contact').value
+        const notes = document.getElementById('notes').value
+
+
+        if (!food_name || !quantity || !exp_date || !location || !contact) {
+            showMessage('Please fill all fields', 'error');
+            loader.classList.add('hidden');
+            formContent.classList.remove('hidden');
+            return
+        }
+
+        try {
+            let imageUrl;
+            if (image.files && image.files[0]) {
+                const formData = new FormData();
+                formData.append('file', image.files[0]);
+                formData.append('upload_preset', UPLOAD_PRESET)
+
+                const cloudinaryResponse = await fetch(CLOUDINARY_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+                const cloudinaryData = await cloudinaryResponse.json();
+                imageUrl = cloudinaryData.secure_url
+            }
+
+            const food = {
+                food_name,
+                quantity,
+                exp_date,
+                location,
+                contact,
+                notes,
+                imageUrl,
+                status: 'Available',
+                userId: user.uid,
+                postedAt: new Date()
+            }
+            console.log(food);
+
+            const docRef = await addDoc(collection(db, "food"), food);
+            console.log("Document written with ID: ", docRef.id);
+
+            showMessage('Food submitted successfully!', 'success');
+
+            document.getElementById('food_name').value = '';
+            document.getElementById('quantity').value = '';
+            document.getElementById('exp_date').value = '';
+            document.getElementById('location').value = '';
+            document.getElementById('contact').value = '';
+            document.getElementById('notes').value = '';
+            image.value = '';
+            document.getElementById('image_preview').classList.remove('show');
+
+            // Hide loader and show form content
+            setTimeout(() => {
+                loader.classList.add('hidden');
+                formContent.classList.remove('hidden');
+            }, 2000);
+
+        }
+        catch (e) {
+            console.error("Error: ", e);
+            showMessage('Failed to post food. Please try again.', 'error');
+            // Hide loader and show form on error
+            loader.classList.add('hidden');
+            formContent.classList.remove('hidden');
+        }
+    })
+
+
+
+
+</script>
+
+</html>

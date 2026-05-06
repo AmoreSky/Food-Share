@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Share</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <nav class="navbar bg-body-tertiary">
+        <div class="container">
+            <div class="logo">
+                <img src="images/give-food.png" alt="food share">
+                <a class="navbar-brand">FOOD SHARE</a>
+            </div>
+            <div class="d-flex gap-3" role="search">
+                <a href="login.html" class="btn btn-outline-success"><span>Login</span></a>
+                <a href="signup.html" class="btn btn-success"><span>Get Started</span></a>
+            </div>
+        </div>
+    </nav>
+
+    <section id="hero_section">
+        <div class="hero-container">
+            <div>
+                <h3>Share Extra Food. Fight Hunger.</h3>
+                <p>FoodShare connects people with surplus food to those who need it, reducing waste and supporting
+                    communities.</p>
+                <div class="d-flex">
+                    <a href="signup.html" class="btn btn-success"><span>Get Started</span></a>
+                    <a href="login.html" class="btn btn-outline-success"><span>Login</span></a>
+                </div>
+            </div>
+            <div>
+                <img src="images/roommates-with-delicious-food-medium-shot-min.jpg" alt="roomates sharing food">
+            </div>
+        </div>
+    </section>
+
+    <section id="how_it_works">
+        <div class="section-header">
+            <h2>How It Works</h2>
+            <p>Three simple steps to start making a difference in your community</p>
+        </div>
+        <div class="cards-container">
+            <div class="card" style="width: 18rem;">
+                <div class="card-number">1</div>
+                <div class="card-body">
+                    <h5 class="card-title">Sign Up</h5>
+                    <p class="card-text">Create an account in seconds and join our community of food sharers.</p>
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <div class="card-number">2</div>
+                <div class="card-body">
+                    <h5 class="card-title">Post or Find Food</h5>
+                    <p class="card-text">Share extra food or browse available items in your area.</p>
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <div class="card-number">3</div>
+                <div class="card-body">
+                    <h5 class="card-title">Claim & Share</h5>
+                    <p class="card-text">Connect with others and help reduce hunger together.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="impact">
+        <div>This project supports UN Sustainable Development Goal 2: Zero Hunger by reducing food waste and improving
+            access to food at the community level.</div>
+    </section>
+
+    <section class="cta">
+        <h3>Ready to make a difference?</h3>
+        <a href="signup.html" class="btn btn-success"><span>Get Started</span></a>
+    </section>
+
+    <section id="footer" class="d-flex">
+        <div>© <span id="year"></span> FoodShare</div>
+        <div>Built for Zero Hunger Initiative</div>
+    </section>
+</body>
+<script>
+    document.getElementById('year').textContent = new Date().getFullYear()
+</script>
+
+</html>

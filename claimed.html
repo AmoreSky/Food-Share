@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claimed</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="claimed.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+    <nav class="navbar bg-body-tertiary">
+        <div class="container">
+            <div class="logo">
+                <img src="images/give-food.png" alt="food share">
+                <a class="navbar-brand">FOOD SHARE</a>
+            </div>
+            <div class="d-flex gap-3" role="search">
+                <a href="dashboard.html" class="btn btn-outline-success"><span>Dashboard</span></a>
+                <a href="postedFoods.html" class="btn btn-outline-success"><span>Posted Foods</span></a>
+                <a href="post.html" class="btn btn-outline-success"><span>Post Food</span></a>
+                <a href="#" class="btn btn-success" id="signout"><span>Signout</span></a>
+
+            </div>
+        </div>
+    </nav>
+
+    <h2 class="foods-title">Claimed Foods</h2>
+    <div id="displayClaimedfoods"></div>
+</body>
+
+</html>
+<script type="module">
+    import { auth, db, signOut, collection, getDocs, updateDoc, onAuthStateChanged } from "./script.js";
+
+    let user;
+
+    document.getElementById('signout').addEventListener('click', () => {
+        signOut(auth).then(() => {
+            setTimeout(() => {
+                window.location.href = 'login.html'
+            }, 1500)
+        }).catch((error) => {
+            console.log(error);
+        });
+    })
+
+
+    const displayClaimedFoods = () => {
+        displayClaimedfoods.innerHTML = '<div class="loader-inline"><div class="spinner-inline"></div><p>Loading foods...</p></div>';
+        getDocs(collection(db, "food")).then(querySnapshot => {
+            let userHasFood = false;
+            let foodHTML = '';
+            const now = Date.now()
+            const CLAIM_DURATION = 2 * 60 * 60 * 1000;
+
+            querySnapshot.forEach(async (doc) => {
+                const food = doc.data();
+
+                if (food.claimedBy && food.claimedAt) {
+                    if ((now - food.claimedAt.toMillis()) > CLAIM_DURATION) {
+                        // Release expired claim
+                        await updateDoc(doc.ref, {
+                            claimedBy: null,
+                            claimedAt: null
+                        });
+                        return;
+                    }
+                }
+
+                if (food.claimedBy == user.uid) {
+                    userHasFood = true;
+                    let foodId = doc.id;
+                    foodHTML += `
+                        <div class="food-card">
+                            <img src="${food.imageUrl}" alt="${food.food_name} image">
+                            <div class="card-body">
+                                <h5 class="card-title">${food.food_name}</h5>
+                                <div class="card-details">
+                                    <p><strong>Qty:</strong> ${food.quantity}</p>
+                                    <p><strong>Expires:</strong> ${food.exp_date}</p>
+                                </div>
+                                <p class="card-text"><strong>Location:</strong> ${food.location}</p>
+                                <p class="card-text"><strong>Contact:</strong> ${food.contact}</p>
+                                <div class="card-notes">
+                                    <p class="card-text"><strong>Notes:</strong> ${food.notes}</p>
+                                </div>
+                                <button type="button" class="btn btn-success collect-food-btn" data-food-id="${foodId}">Collect Food</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            })
+
+            if (userHasFood) {
+                displayClaimedfoods.innerHTML = foodHTML;
+            } else {
+                displayClaimedfoods.innerHTML = '<div id="noFoodsMessage">No foods claimed yet. Check out the dashboard for available foods!</div> <br> <a href="dashboard.html" class="btn btn-outline-success"><span>Dashboard</span></a>';
+            }
+        }).catch((error) => {
+            displayClaimedfoods.innerHTML = '<div class="alert alert-danger">Error loading foods. Please refresh the page.</div>';
+            console.error('Error fetching foods:', error);
+        });
+    }
+
+
+    onAuthStateChanged(auth, (currentUser) => {
+        if (currentUser) {
+            user = currentUser;
+            console.log("Logged in user:", user.email, user.uid);
+            displayClaimedFoods();
+        } else {
+            // Redirect to login if not authenticated
+            window.location.href = "login.html";
+        }
+    });
+
+</script>

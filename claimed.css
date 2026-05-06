@@ -1,0 +1,266 @@
+body {
+    background: linear-gradient(180deg, #f7fbf7 0%, #ffffff 32%, #f4f8f4 100%);
+    color: #24312b;
+}
+
+.navbar {
+    background-color: #fff !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 1rem 0;
+}
+
+.navbar .container {
+    max-width: 1280px;
+    padding: 0 2rem;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: #28a745 !important;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo img {
+    height: 40px;
+    width: auto;
+}
+
+.foods-title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #173b25;
+    margin: 2.5rem 0 1.75rem;
+    letter-spacing: -0.5px;
+}
+
+#displayClaimedfoods,
+#displayClaimedFoods {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    padding: 0 20px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.food-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 460px;
+    border: 1px solid rgba(40, 167, 69, 0.1);
+    border-radius: 18px;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0 10px 28px rgba(20, 36, 26, 0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.food-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 36px rgba(20, 36, 26, 0.14);
+}
+
+.food-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    background: linear-gradient(135deg, #e3ece4 0%, #f3f7f3 100%);
+}
+
+.food-card .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    flex: 1;
+    padding: 1.25rem;
+}
+
+.food-card .card-title {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #173b25;
+    line-height: 1.25;
+}
+
+.food-card .card-text {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #5f6d63;
+}
+
+.food-card .card-text strong {
+    color: #198754;
+    font-weight: 700;
+}
+
+.card-details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    padding: 0.9rem 0;
+    border-top: 1px solid #edf2ee;
+    border-bottom: 1px solid #edf2ee;
+}
+
+.card-details p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #5f6d63;
+}
+
+.card-details p strong {
+    color: #198754;
+}
+
+.card-notes {
+    flex: 1;
+    padding-top: 0.25rem;
+    color: #5f6d63;
+}
+
+.claim-food-btn {
+    margin-top: auto;
+    width: 100%;
+    border-radius: 999px;
+    padding: 0.75rem 1rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #198754 0%, #146c43 100%);
+    border: none;
+    box-shadow: 0 10px 18px rgba(25, 135, 84, 0.2);
+}
+
+.claim-food-btn:hover {
+    filter: brightness(1.03);
+    transform: translateY(-1px);
+}
+
+#noFoodsMessage {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4.5rem 1.5rem;
+    color: #6d7b71;
+    font-size: 1.05rem;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px dashed #cfe2d5;
+    border-radius: 18px;
+    box-shadow: 0 10px 24px rgba(20, 36, 26, 0.05);
+}
+
+#noFoodsMessage::before {
+    content: '🍽️';
+    display: block;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 992px) {
+
+    #displayClaimedfoods,
+    #displayClaimedFoods {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 18px;
+        padding: 0 15px 32px;
+    }
+
+    .foods-title {
+        font-size: 1.75rem;
+        margin: 2rem 0 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .foods-title {
+        font-size: 1.6rem;
+        margin: 1.75rem 0 1.25rem;
+    }
+
+    #displayClaimedfoods,
+    #displayClaimedFoods {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 14px;
+        padding: 0 12px 28px;
+    }
+
+    .food-card {
+        min-height: 430px;
+    }
+
+    .food-card img {
+        height: 200px;
+    }
+
+    .food-card .card-body {
+        padding: 1rem;
+    }
+
+    .card-details {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .foods-title {
+        font-size: 1.45rem;
+    }
+
+    #displayClaimedfoods,
+    #displayClaimedFoods {
+        grid-template-columns: 1fr;
+        padding: 0 10px 24px;
+    }
+
+    .food-card {
+        min-height: auto;
+    }
+
+    .food-card img {
+        height: 190px;
+    }
+}
+
+/* Loader styles */
+.loader-inline {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 100px 20px;
+    text-align: center;
+    grid-column: 1 / -1;
+    width: 100%;
+}
+
+.spinner-inline {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #28a745;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loader-inline p {
+    color: #28a745;
+    font-size: 16px;
+    font-weight: 500;
+}

@@ -4,47 +4,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Dashboard — Food Share</title>
+    <meta name="description" content="Browse and claim available food donations in your community on Food Share.">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="dashboard-style.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard-style.css">
 </head>
 
 <body>
+
+    <!-- ═══════════════════════════════════════════
+         NAVBAR
+    ══════════════════════════════════════════════ -->
     <nav class="navbar bg-body-tertiary">
         <div class="container">
+            <!-- Brand -->
             <div class="logo">
-                <img src="images/give-food.png" alt="food share">
-                <a class="navbar-brand" href="/dashboard.html">FOOD SHARE</a>
+                <img src="images/give-food.png" alt="Food Share logo">
+                <a class="navbar-brand" href="/dashboard.html">Food Share</a>
             </div>
-            <div class="d-flex gap-3" role="search">
-                <a href="post.html" class="btn btn-outline-success"><span>Post Food</span></a>
-                <a href="postedFoods.html" class="btn btn-outline-success"><span>Posted Foods</span></a>
-                <a href="claimed.html" class="btn btn-outline-success"><span>Claimed Food</span></a>
-                <a href="#" class="btn btn-success" id="signout"><span>Signout</span></a>
+
+            <!-- Nav links -->
+            <ul class="nav-links">
+                <li><a href="dashboard.html" class="active" id="nav-dashboard">Dashboard</a></li>
+                <li><a href="postedFoods.html" id="nav-posted">Posted Foods</a></li>
+                <li><a href="claimed.html" id="nav-claimed">Claimed Food</a></li>
+                <li><a href="post.html" id="nav-post">Post Food</a></li>
+            </ul>
+
+            <!-- Right actions -->
+            <div class="nav-actions">
+                <a href="#" class="btn-signout" id="signout">Sign Out</a>
+                <div class="user-avatar" id="userAvatar" title="Your profile">
+                    <span id="avatarInitial">U</span>
+                </div>
             </div>
         </div>
     </nav>
 
-    <div class="welcome-section">
-        <h3 id="welcomeUser"></h3>
+    <!-- ═══════════════════════════════════════════
+         WELCOME BANNER
+    ══════════════════════════════════════════════ -->
+    <div class="welcome-banner">
+        <div class="welcome-banner-inner">
+            <div class="welcome-text">
+                <h1 id="welcomeUser">Welcome back!</h1>
+                <p>Sharing is caring. Check out the latest food donations available in your community today.</p>
+            </div>
+            <div class="welcome-illustration" aria-hidden="true">
+                <!-- Fork & knife SVG icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.06 22.99h1.66c.84 0 1.53-.64 1.63-1.46L23 5.05h-5V1h-1.97v4.05h-4.97l.3 2.34c1.71.47 3.31 1.32 4.27 2.26 1.44 1.42 2.43 2.89 2.43 5.29v8.05zM1 21.99V21h15.03v.99c0 .55-.45 1-1.01 1H2.01c-.56 0-1.01-.45-1.01-1zm15.03-7c0-8-15.03-8-15.03 0h15.03zM1.02 17h15v2h-15z"/>
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" viewBox="0 0 24 24" fill="currentColor" style="margin-left:8px; opacity:0.7;">
+                    <path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/>
+                </svg>
+            </div>
+        </div>
     </div>
 
-    <h2 class="foods-title">Available Foods</h2>
-    <div id="displayPostedFoods"></div>
-    <div class="modal fade" id="displayClaimedFood" tabindex="-1" aria-labelledby="displayClaimedFood"
-        aria-hidden="true">
-        <div class="modal-dialog">
+    <!-- ═══════════════════════════════════════════
+         AVAILABLE FOODS
+    ══════════════════════════════════════════════ -->
+    <section class="foods-section">
+        <div class="foods-header">
+            <h2>Available Foods</h2>
+            <div class="foods-controls">
+                <!-- Search -->
+                <div class="search-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input type="text" id="searchInput" placeholder="Search for food..." aria-label="Search for food">
+                </div>
+                <!-- Filter -->
+                <button class="btn-filter" id="filterBtn" aria-label="Filter foods">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="4" y1="6" x2="16" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="12" y2="18"/>
+                    </svg>
+                    Filter
+                </button>
+            </div>
+        </div>
+
+        <!-- Food cards injected here -->
+        <div id="displayPostedFoods"></div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         STATS SECTION
+    ══════════════════════════════════════════════ -->
+    <div class="stats-section">
+        <div class="stats-inner">
+            <div class="stat-item">
+                <div class="stat-icon">🤝</div>
+                <div class="stat-text">
+                    <h3>1,240</h3>
+                    <p>Meals shared this month</p>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">👥</div>
+                <div class="stat-text">
+                    <h3>856</h3>
+                    <p>Active community members</p>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">🌿</div>
+                <div class="stat-text">
+                    <h3>420kg</h3>
+                    <p>Food waste prevented</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         FOOTER
+    ══════════════════════════════════════════════ -->
+    <footer class="dashboard-footer">
+        <div class="footer-inner">
+            <!-- Brand col -->
+            <div class="footer-brand">
+                <div class="logo footer-logo">
+                    <img src="images/give-food.png" alt="Food Share logo">
+                    <span class="navbar-brand">Food Share</span>
+                </div>
+                <p>Connecting communities through food sharing.<br>Let's reduce waste and feed the world together.</p>
+            </div>
+
+            <!-- Quick links col -->
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Community Guidelines</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact col -->
+            <div class="footer-col">
+                <h4>Contact Us</h4>
+                <div class="footer-contact-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                    </svg>
+                    support@foodshare.org
+                </div>
+                <div class="footer-contact-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.7 11.5 19.79 19.79 0 0 1 1.12 2.82 2 2 0 0 1 3.09 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                    </svg>
+                    +234 800 FOOD SHARE
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom" id="footer-bottom">
+            &copy; 2024 Food Share Community. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════════
+         FAB — Quick post shortcut
+    ══════════════════════════════════════════════ -->
+    <a href="post.html" class="fab" title="Post new food" aria-label="Post new food">+</a>
+
+    <!-- ═══════════════════════════════════════════
+         CLAIM FOOD MODAL
+    ══════════════════════════════════════════════ -->
+    <div class="modal fade" id="displayClaimedFood" tabindex="-1" aria-labelledby="displayClaimedFoodLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="displayClaimedFoodLabel">Modal title</h1>
+                    <h1 class="modal-title fs-5" id="displayClaimedFoodLabel">Food Details</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    ...
+                    <!-- Populated by JS -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -53,37 +195,49 @@
             </div>
         </div>
     </div>
+
 </body>
+
 <script type="module">
     import { auth, db, signOut, collection, doc, getDocs, updateDoc, onAuthStateChanged } from "./script.js";
 
     let user;
     let userName;
+    let allFoods = []; // store for search/filter
+    let year = new Date().getFullYear()
 
-    document.getElementById('signout').addEventListener('click', () => {
+    // ── Sign out ──────────────────────────────────
+    document.getElementById('signout').addEventListener('click', (e) => {
+        e.preventDefault();
         signOut(auth).then(() => {
-            setTimeout(() => {
-                window.location.href = 'login.html'
-            }, 1500)
-        }).catch((error) => {
-            console.log(error);
-        });
-    })
+            setTimeout(() => { window.location.href = 'login.html'; }, 1500);
+        }).catch((error) => { console.log(error); });
+    });
 
+    // ── Search handler ────────────────────────────
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        renderFoodCards(
+            query ? allFoods.filter(f => f.food.food_name.toLowerCase().includes(query)) : allFoods
+        );
+    });
+
+    document.getElementById('footer-bottom').innerHTML = `<p>&copy; ${year} Food Share Community. All rights reserved.</p>`
+
+    // ── Display available foods ───────────────────
     const displayAvailableFoods = () => {
         displayPostedFoods.innerHTML = '<div class="loader-inline"><div class="spinner-inline"></div><p>Loading foods...</p></div>';
 
         getDocs(collection(db, "food")).then(querySnapshot => {
-            let userHasFood = false;
             const now = Date.now();
             const CLAIM_DURATION = 2 * 60 * 60 * 1000;
 
-            // First, release any expired claims
-            querySnapshot.forEach(async (doc) => {
-                const food = doc.data();
+            // Release expired claims
+            querySnapshot.forEach(async (docSnap) => {
+                const food = docSnap.data();
                 if (food.status == 'claimed') {
                     if ((now - food.claimedAt.toMillis()) > CLAIM_DURATION) {
-                        await updateDoc(doc.ref, {
+                        await updateDoc(docSnap.ref, {
                             status: 'Available',
                             claimedBy: null,
                             claimedAt: null
@@ -92,106 +246,151 @@
                 }
             });
 
-            // Then display available foods
-            let foodHTML = '';
-            querySnapshot.forEach((doc) => {
-                if (doc.data().status == 'Available' && doc.data().userId != user.uid) {
-                    userHasFood = true;
-                    let food = doc.data();
-                    let foodId = doc.id;
-                    foodHTML += `
-                        <div class="food-card">
-                            <img src="${food.imageUrl}" alt="${food.food_name} image">
-                            <div class="card-body">
-                                <h5 class="card-title">${food.food_name}</h5>
-                                <div class="card-details">
-                                    <p><strong>Qty:</strong> ${food.quantity}</p>
-                                    <p><strong>Expires:</strong> ${food.exp_date}</p>
-                                </div>
-                                <p class="card-text"><strong>Location:</strong> ${food.location}</p>
-                                <div class="card-notes">
-                                    <p class="card-text"><strong>Notes:</strong> ${food.notes}</p>
-                                </div>
-                                <div class='d-flex'>
-                                    <button type="button" class="btn btn-success claim-food-btn" data-food-id="${foodId}">Claim Food</button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+            // Build available food list (excluding own posts)
+            allFoods = [];
+            querySnapshot.forEach((docSnap) => {
+                if (docSnap.data().status == 'Available' && docSnap.data().userId != user.uid) {
+                    allFoods.push({ id: docSnap.id, food: docSnap.data() });
                 }
             });
 
+            renderFoodCards(allFoods);
 
-            if (userHasFood) {
-                displayPostedFoods.innerHTML = foodHTML;
-            } else {
-                displayPostedFoods.innerHTML = '<div id="noFoodsMessage">No foods available at the moment. Please check again later</div> <br>  <a href="post.html" class="btn btn-outline-success"><span>Post Food</span></a>' ;
-            }
+            // Store snapshot for modal
+            window._foodSnapshot = querySnapshot;
 
-            document.querySelectorAll('.claim-food-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const foodId = e.target.getAttribute('data-food-id');
-                    showFoodModal(foodId, querySnapshot);
-                });
-            });
         }).catch((error) => {
             displayPostedFoods.innerHTML = '<div class="alert alert-danger">Error loading foods. Please refresh the page.</div>';
             console.error('Error fetching foods:', error);
         });
-    }
+    };
 
+    
+
+    // ── Render food cards ─────────────────────────
+    const renderFoodCards = (foods) => {
+        if (!foods.length) {
+            displayPostedFoods.innerHTML = `
+                <div id="noFoodsMessage">
+                    No foods available at the moment. Please check again later.
+                    <a href="post.html" class="btn btn-outline-success mt-3"><span>Post Food</span></a>
+                </div>`;
+            return;
+        }
+
+        // "NEW" = posted within the last 24 hours (if postedAt exists), else always badge first card
+        const now = Date.now();
+        const DAY_MS = 24 * 60 * 60 * 1000;
+
+        let foodHTML = '';
+        foods.forEach(({ id: foodId, food }, idx) => {
+            const isNew = food.postedAt
+                ? (now - food.postedAt.toMillis()) < DAY_MS
+                : idx === 0;
+
+            foodHTML += `
+                <div class="food-card">
+                    <div class="card-img-wrapper">
+                        <img src="${food.imageUrl}" alt="${food.food_name}" loading="lazy">
+                        ${isNew ? '<span class="badge-new">New</span>' : ''}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">${food.food_name}</h5>
+                        <div class="card-meta">
+                            <div class="meta-item">
+                                <svg class="qty-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#197a3a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                                </svg>
+                                <strong>Qty:</strong>&nbsp;${food.quantity}
+                            </div>
+                            <div class="meta-item">
+                                <svg class="exp-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#e05252" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                                </svg>
+                                <strong>Expires:</strong>&nbsp;<strong>${food.exp_date}</strong>
+                            </div>
+                        </div>
+                        <div class="card-location">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="3"/>
+                            </svg>
+                            Location: ${food.location}
+                        </div>
+                        <button type="button" class="btn-claim claim-food-btn" data-food-id="${foodId}">Claim Food</button>
+                    </div>
+                </div>
+            `;
+        });
+
+        displayPostedFoods.innerHTML = foodHTML;
+
+        // Attach claim button listeners
+        document.querySelectorAll('.claim-food-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const foodId = e.currentTarget.getAttribute('data-food-id');
+                showFoodModal(foodId, window._foodSnapshot);
+            });
+        });
+    };
+
+    // ── Show food detail modal ────────────────────
     const showFoodModal = (foodId, querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            if (doc.id === foodId) {
-                let food = doc.data();
+        querySnapshot.forEach((docSnap) => {
+            if (docSnap.id === foodId) {
+                let food = docSnap.data();
                 document.getElementById('displayClaimedFoodLabel').textContent = food.food_name;
                 document.querySelector('#displayClaimedFood .modal-body').innerHTML = `
-                <p><strong>Quantity:</strong> ${food.quantity}</p>
-                <p><strong>Expiration Date:</strong> ${food.exp_date}</p>
-                <p><strong>Location:</strong> ${food.location}</p>
-                <p><strong>Notes:</strong> ${food.notes}</p>
-                <p><strong>Contact:</strong> ${food.contact || 'Unknown'}</p>
-            `;
-                // Store foodId for the save changes button
+                    <p><strong>Quantity:</strong> ${food.quantity}</p>
+                    <p><strong>Expiration Date:</strong> ${food.exp_date}</p>
+                    <p><strong>Location:</strong> ${food.location}</p>
+                    <p><strong>Notes:</strong> ${food.notes}</p>
+                    <p><strong>Contact:</strong> ${food.contact || 'Unknown'}</p>
+                `;
                 document.querySelector('#displayClaimedFood .btn-success').setAttribute('data-food-id', foodId);
                 new bootstrap.Modal(document.getElementById('displayClaimedFood')).show();
             }
         });
-    }
+    };
 
+    // ── Claim food ────────────────────────────────
     document.getElementById('claim-food').addEventListener('click', async () => {
         const foodId = document.getElementById('claim-food').dataset.foodId;
-
         if (!foodId) return;
-
         try {
             await updateDoc(doc(db, "food", foodId), {
                 status: "claimed",
                 claimedBy: user.uid,
                 claimedAt: new Date()
-            })
-
+            });
             window.location.href = 'claimed.html';
         } catch (error) {
-            console.error('Error claiming foods:', error);
+            console.error('Error claiming food:', error);
         }
-    })
+    });
 
+    // ── Auth state ────────────────────────────────
     onAuthStateChanged(auth, (currentUser) => {
         if (currentUser) {
             user = currentUser;
+
+            // Fetch username & set avatar
             getDocs(collection(db, "users")).then(querySnapshot => {
-                querySnapshot.forEach((doc) => {
-                    if (doc.data().userId == user.uid) {
-                        userName = doc.data().username;
-                        welcomeUser.innerHTML = `Welcome, <strong>${userName}</strong>!`;
+                querySnapshot.forEach((docSnap) => {
+                    if (docSnap.data().userId == user.uid) {
+                        userName = docSnap.data().username;
+                        document.getElementById('welcomeUser').innerHTML =
+                            `Welcome, <strong>${userName}</strong>!`;
+
+                        // Set avatar initial
+                        const initial = userName ? userName.charAt(0).toUpperCase() : 'U';
+                        document.getElementById('avatarInitial').textContent = initial;
                     }
                 });
             });
+
             console.log("Logged in user:", user.email, user.uid);
             displayAvailableFoods();
         } else {
-            // Redirect to login if not authenticated
             window.location.href = "login.html";
         }
     });

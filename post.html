@@ -4,146 +4,261 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post Food</title>
+    <title>Post Food — Food Share</title>
+    <meta name="description" content="Share your excess food with the community and help reduce waste on Food Share.">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="post-style.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard-style.css">
+    <link rel="stylesheet" href="post-style.css">
 </head>
 
 <body>
+
+    <!-- ═══════════════════════════════════════════
+         NAVBAR
+    ══════════════════════════════════════════════ -->
     <nav class="navbar bg-body-tertiary">
         <div class="container">
+            <!-- Brand -->
             <div class="logo">
-                <img src="images/give-food.png" alt="food share">
-                <a class="navbar-brand" href="dashboard.html">FOOD SHARE</a>
+                <img src="images/give-food.png" alt="Food Share logo">
+                <a class="navbar-brand" href="dashboard.html">Food Share</a>
             </div>
-            <div class="d-flex gap-3" role="search">
-                <a href="dashboard.html" class="btn btn-outline-success"><span>Dashboard</span></a>
-                <a href="postedFoods.html" class="btn btn-outline-success"><span>Posted Foods</span></a>
-                <a href="claimed.html" class="btn btn-outline-success"><span>Claimed Food</span></a>
-                <a href="#" class="btn btn-success" id="signout"><span>Signout</span></a>
 
+            <!-- Nav links -->
+            <ul class="nav-links">
+                <li><a href="dashboard.html" id="nav-dashboard">Dashboard</a></li>
+                <li><a href="postedFoods.html" id="nav-posted">Posted Foods</a></li>
+                <li><a href="claimed.html" id="nav-claimed">Claimed Food</a></li>
+                <li><a href="post.html" class="active" id="nav-post">Post Food</a></li>
+            </ul>
+
+            <!-- Right actions -->
+            <div class="nav-actions">
+                <a href="#" class="btn-signout" id="signout">Sign Out</a>
+                <div class="user-avatar" id="userAvatar" title="Your profile">
+                    <span id="avatarInitial">U</span>
+                </div>
             </div>
         </div>
     </nav>
 
-    <div id="form-group">
-        <div id="post-loader" class="post-loader hidden">
-            <div class="food-loader-icon">🍽️</div>
-            <p>Sharing your food...</p>
-        </div>
-        <div id="form-content">
-            <h3>Post Food</h3>
-            <img id="image_preview" alt="Preview">
-            <div class="file-label-wrapper">
-                <label for="food_image" class="btn btn-info">Upload image</label>
-                <input type="file" id="food_image" class="d-none" accept="image/*">
-            </div>
-            <div id="messageBox"></div>
-            <input type="text" placeholder="Food Name" id="food_name">
-            <input type="text" placeholder="Quantity" id="quantity">
-            <input type="text" placeholder="Location eg: Bodija, Ibadan" id="location">
-            <input type="number" placeholder="phone number" id="contact">
-            <label for="exp_date">Expiary Date</label>
-            <input type="date" placeholder="Expiary date and time" id="exp_date">
-            <textarea name="" id="notes" placeholder="notes"></textarea>
-            <button id="post" class="btn btn-success">Post Food</button>
-        </div>
+    <!-- ═══════════════════════════════════════════
+         PAGE HEADER
+    ══════════════════════════════════════════════ -->
+    <div class="post-page-header">
+        <h1>Post Food</h1>
+        <p>Share your excess food with the community and help reduce waste.</p>
     </div>
+
+    <!-- ═══════════════════════════════════════════
+         FORM CARD
+    ══════════════════════════════════════════════ -->
+    <div id="form-group">
+
+        <!-- Loading overlay -->
+        <div id="post-loader" class="hidden">
+            <div class="food-loader-icon">🍽️</div>
+            <p>Sharing your food…</p>
+        </div>
+
+        <!-- Form content -->
+        <div id="form-content">
+
+            <!-- Feedback message -->
+            <div id="messageBox"></div>
+
+            <!-- ── Image upload ── -->
+            <div class="upload-label-wrap">
+                <span class="upload-field-label">Food Image</span>
+                <label class="upload-drop-zone" for="food_image" id="dropZone">
+                    <!-- Overlay content (hidden when image is selected) -->
+                    <div class="upload-overlay" id="uploadOverlay">
+                        <!-- Upload icon -->
+                        <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg" width="48" height="48"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="12" y1="18" x2="12" y2="12"/>
+                            <polyline points="9 15 12 12 15 15"/>
+                        </svg>
+                        <strong>Upload Image</strong> <br>
+                        <span>High resolution JPEG or PNG (Max 5MB)</span>
+                    </div>
+
+                    <!-- Preview image (hidden until file chosen) -->
+                    <img id="image_preview" alt="Food preview">
+
+                    <!-- Real file input, transparent overlay -->
+                    <input type="file" id="food_image" accept="image/*">
+                </label>
+            </div>
+
+            <!-- ── Food Name ── -->
+            <div class="form-field">
+                <label for="food_name">Food Name</label>
+                <input type="text" id="food_name" placeholder="e.g., Fresh Organic Apples">
+            </div>
+
+            <!-- ── Quantity + Phone Number ── -->
+            <div class="form-row">
+                <div class="form-field" style="margin-bottom:0;">
+                    <label for="quantity">Quantity</label>
+                    <div class="input-with-chip">
+                        <input type="text" id="quantity" placeholder="e.g., 5kg or 10 pieces">
+                        <span class="qty-chip">QTY</span>
+                    </div>
+                </div>
+                <div class="form-field" style="margin-bottom:0;">
+                    <label for="contact">Phone Number</label>
+                    <input type="tel" id="contact" placeholder="+234 ...">
+                </div>
+            </div>
+
+            <!-- ── Location ── -->
+            <div class="form-field">
+                <label for="location">Location</label>
+                <div class="input-with-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                    <input type="text" id="location" placeholder="e.g., Bodija, Ibadan">
+                </div>
+            </div>
+
+            <!-- ── Expiry Date ── -->
+            <div class="form-field">
+                <label for="exp_date">Expiry Date</label>
+                <input type="date" id="exp_date">
+            </div>
+
+            <!-- ── Additional Notes ── -->
+            <div class="form-field">
+                <label for="notes">Additional Notes</label>
+                <textarea id="notes" placeholder="e.g., Allergen information, pick-up instructions..."></textarea>
+            </div>
+
+            <!-- ── Submit ── -->
+            <button class="btn-post-food" id="post">
+                <!-- Arrow-right icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                Post Food
+            </button>
+
+            <p class="post-disclaimer">
+                By posting, you agree to our <a href="#">Community Food Safety Guidelines</a>.
+            </p>
+
+        </div><!-- /form-content -->
+    </div><!-- /form-group -->
+
 </body>
+
 <script type="module">
-    import { auth, db, signOut, onAuthStateChanged, collection, addDoc } from "./script.js";
+    import { auth, db, signOut, onAuthStateChanged, collection, addDoc, getDocs } from "./script.js";
 
-    const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/duxscpwuz/image/upload";
-    const UPLOAD_PRESET = "food_share";
-
+    const CLOUDINARY_URL  = "https://api.cloudinary.com/v1_1/duxscpwuz/image/upload";
+    const UPLOAD_PRESET   = "food_share";
 
     let user;
 
+    // ── Show feedback message ────────────────────────────────
     function showMessage(text, type) {
         const messageBox = document.getElementById('messageBox');
         messageBox.textContent = text;
         messageBox.className = `show ${type}`;
-        setTimeout(() => {
-            messageBox.classList.remove('show');
-        }, 3500);
+        setTimeout(() => { messageBox.classList.remove('show'); }, 3500);
     }
 
+    // ── Auth guard ───────────────────────────────────────────
     onAuthStateChanged(auth, (currentUser) => {
         if (currentUser) {
             user = currentUser;
+
+            // Set avatar initial from username
+            getDocs(collection(db, "users")).then(qs => {
+                qs.forEach(docSnap => {
+                    if (docSnap.data().userId == user.uid) {
+                        const name = docSnap.data().username || '';
+                        document.getElementById('avatarInitial').textContent =
+                            name ? name.charAt(0).toUpperCase() : 'U';
+                    }
+                });
+            });
         } else {
-            // Redirect to login if not authenticated
             window.location.href = "login.html";
         }
     });
 
-    document.getElementById('signout').addEventListener('click', () => {
+    // ── Sign out ─────────────────────────────────────────────
+    document.getElementById('signout').addEventListener('click', (e) => {
+        e.preventDefault();
         signOut(auth).then(() => {
-            setTimeout(() => {
-                window.location.href = 'login.html'
+            setTimeout(() => { window.location.href = 'login.html'; }, 1500);
+        }).catch(err => console.log(err));
+    });
 
-            }, 1500)
-        }).catch((error) => {
-            console.log(error);
-
-        });
-    })
-
+    // ── Image preview ─────────────────────────────────────────
     document.getElementById('food_image').addEventListener('change', () => {
-        const image = document.getElementById('food_image');
-        const preview = document.getElementById('image_preview');
+        const input    = document.getElementById('food_image');
+        const preview  = document.getElementById('image_preview');
+        const dropZone = document.getElementById('dropZone');
+        const overlay  = document.getElementById('uploadOverlay');
 
-        if (image.files && image.files[0]) {
-            preview.src = URL.createObjectURL(image.files[0]);
+        if (input.files && input.files[0]) {
+            preview.src = URL.createObjectURL(input.files[0]);
             preview.classList.add('show');
+            overlay.style.display = 'none';
+            dropZone.classList.add('has-image');
         } else {
             preview.classList.remove('show');
+            overlay.style.display = '';
+            dropZone.classList.remove('has-image');
         }
     });
 
+    // ── Post food ─────────────────────────────────────────────
     document.getElementById('post').addEventListener('click', async () => {
-        const postBtn = document.getElementById('post');
-        const loader = document.getElementById('post-loader');
+        const loader      = document.getElementById('post-loader');
         const formContent = document.getElementById('form-content');
 
-        // Show loader and hide form content
-        loader.classList.remove('hidden');
-        formContent.classList.add('hidden');
-
-        const image = document.getElementById('food_image');
-        const food_name = document.getElementById('food_name').value
-        const quantity = document.getElementById('quantity').value
-        const exp_date = document.getElementById('exp_date').value
-        const location = document.getElementById('location').value
-        const contact = document.getElementById('contact').value
-        const notes = document.getElementById('notes').value
-
+        const image     = document.getElementById('food_image');
+        const food_name = document.getElementById('food_name').value.trim();
+        const quantity  = document.getElementById('quantity').value.trim();
+        const exp_date  = document.getElementById('exp_date').value;
+        const location  = document.getElementById('location').value.trim();
+        const contact   = document.getElementById('contact').value.trim();
+        const notes     = document.getElementById('notes').value.trim();
 
         if (!food_name || !quantity || !exp_date || !location || !contact) {
-            showMessage('Please fill all fields', 'error');
-            loader.classList.add('hidden');
-            formContent.classList.remove('hidden');
-            return
+            showMessage('Please fill in all required fields.', 'error');
+            return;
         }
+
+        // Show loader
+        loader.classList.remove('hidden');
+        formContent.classList.add('hidden');
 
         try {
             let imageUrl;
             if (image.files && image.files[0]) {
                 const formData = new FormData();
                 formData.append('file', image.files[0]);
-                formData.append('upload_preset', UPLOAD_PRESET)
+                formData.append('upload_preset', UPLOAD_PRESET);
 
-                const cloudinaryResponse = await fetch(CLOUDINARY_URL, {
-                    method: 'POST',
-                    body: formData
-                });
-                const cloudinaryData = await cloudinaryResponse.json();
-                imageUrl = cloudinaryData.secure_url
+                const res  = await fetch(CLOUDINARY_URL, { method: 'POST', body: formData });
+                const data = await res.json();
+                imageUrl   = data.secure_url;
             }
 
             const food = {
@@ -154,45 +269,35 @@
                 contact,
                 notes,
                 imageUrl,
-                status: 'Available',
-                userId: user.uid,
+                status:   'Available',
+                userId:   user.uid,
                 postedAt: new Date()
-            }
-            console.log(food);
+            };
 
             const docRef = await addDoc(collection(db, "food"), food);
-            console.log("Document written with ID: ", docRef.id);
+            console.log("Document written with ID:", docRef.id);
 
-            showMessage('Food submitted successfully!', 'success');
-
-            document.getElementById('food_name').value = '';
-            document.getElementById('quantity').value = '';
-            document.getElementById('exp_date').value = '';
-            document.getElementById('location').value = '';
-            document.getElementById('contact').value = '';
-            document.getElementById('notes').value = '';
+            // Reset form
+            ['food_name','quantity','exp_date','location','contact','notes'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
             image.value = '';
             document.getElementById('image_preview').classList.remove('show');
+            document.getElementById('uploadOverlay').style.display = '';
+            document.getElementById('dropZone').classList.remove('has-image');
 
-            // Hide loader and show form content
-            setTimeout(() => {
-                loader.classList.add('hidden');
-                formContent.classList.remove('hidden');
-            }, 2000);
-
-        }
-        catch (e) {
-            console.error("Error: ", e);
-            showMessage('Failed to post food. Please try again.', 'error');
-            // Hide loader and show form on error
+            // Hide loader, show form, show success
             loader.classList.add('hidden');
             formContent.classList.remove('hidden');
+            showMessage('Food posted successfully! 🎉', 'success');
+
+        } catch (e) {
+            console.error("Error:", e);
+            loader.classList.add('hidden');
+            formContent.classList.remove('hidden');
+            showMessage('Failed to post food. Please try again.', 'error');
         }
-    })
-
-
-
-
+    });
 </script>
 
 </html>

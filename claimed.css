@@ -1,266 +1,429 @@
+/* ============================================================
+   Claimed Foods Page Styles — Food Share
+   ============================================================ */
+
+/* ── Page shell ── */
 body {
-    background: linear-gradient(180deg, #f7fbf7 0%, #ffffff 32%, #f4f8f4 100%);
-    color: #24312b;
+    background-color: #f0f4f0;
+    min-height: 100vh;
 }
 
-.navbar {
-    background-color: #fff !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    padding: 1rem 0;
-}
-
-.navbar .container {
+/* ── Page header row ── */
+.claimed-header {
     max-width: 1280px;
-    padding: 0 2rem;
-}
-
-.navbar-brand {
-    font-weight: 700;
-    font-size: 1.4rem;
-    color: #28a745 !important;
-}
-
-.logo {
+    margin: 2.5rem auto 0;
+    padding: 0 1rem;
     display: flex;
-    align-items: center;
-    gap: 10px;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
-.logo img {
-    height: 40px;
-    width: auto;
-}
-
-.foods-title {
-    text-align: center;
+.claimed-header-text h1 {
     font-size: 2rem;
     font-weight: 800;
-    color: #173b25;
-    margin: 2.5rem 0 1.75rem;
+    color: #1a2e1a;
+    margin-bottom: 0.35rem;
     letter-spacing: -0.5px;
+    line-height: 1.2;
 }
 
-#displayClaimedfoods,
-#displayClaimedFoods {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 24px;
-    padding: 0 20px 40px;
-    max-width: 1400px;
-    margin: 0 auto;
+.claimed-header-text p {
+    font-size: 0.9rem;
+    color: #5a7a6a;
+    max-width: 460px;
+    line-height: 1.65;
+    margin: 0;
 }
 
-.food-card {
+/* "N Items Rescued" pill badge */
+.rescued-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: #fff;
+    border: 1.5px solid #c8dfc8;
+    border-radius: 50px;
+    padding: 0.45rem 1rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #197a3a;
+    white-space: nowrap;
+    flex-shrink: 0;
+    align-self: flex-start;
+    margin-top: 0.25rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.rescued-pill svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+}
+
+/* ── Content card wrapper ── */
+.claimed-content {
+    max-width: 1280px;
+    margin: 1.75rem auto 2.25rem;
+    padding: 0 1rem;
+}
+
+/* ── Loader ── */
+.loader-inline {
+    grid-column: 1 / -1;
     display: flex;
     flex-direction: column;
-    min-height: 460px;
-    border: 1px solid rgba(40, 167, 69, 0.1);
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    gap: 1rem;
+    background: #fff;
     border-radius: 18px;
+    border: 1px solid #e4ebe4;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+
+.spinner-inline {
+    width: 42px;
+    height: 42px;
+    border: 3px solid #e0f0e6;
+    border-top-color: #197a3a;
+    border-radius: 50%;
+    animation: spin 0.85s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loader-inline p {
+    color: #197a3a;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* ── Empty state card ── */
+.empty-state-card {
+    grid-column: 1 / -1;
+    background: #fff;
+    border-radius: 18px;
+    border: 1px solid #e4ebe4;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    padding: 4rem 2rem 3.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.empty-state-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #e8edf8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+    flex-shrink: 0;
+}
+
+.empty-state-icon svg {
+    width: 36px;
+    height: 36px;
+    color: #6e8fc0;
+}
+
+.empty-state-card h2 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #1a2e1a;
+    margin: 0;
+}
+
+.empty-state-card p {
+    font-size: 0.88rem;
+    color: #7a9a8a;
+    max-width: 360px;
+    line-height: 1.7;
+    margin: 0;
+}
+
+.btn-go-dashboard {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: #197a3a;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 0.65rem 1.4rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    letter-spacing: 0.1px;
+    font-family: inherit;
+    margin-top: 0.5rem;
+}
+
+.btn-go-dashboard:hover {
+    background: #155e2d;
+    box-shadow: 0 6px 18px rgba(25, 122, 58, 0.35);
+    transform: translateY(-1px);
+    color: #fff;
+}
+
+.btn-go-dashboard svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+}
+
+/* ── Food cards grid ── */
+#displayClaimedfoods {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 22px;
+    align-items: stretch;
+}
+
+/* Reuse dashboard card styles with overrides */
+.food-card {
+    background: #fff;
+    border-radius: 16px;
     overflow: hidden;
-    background: #ffffff;
-    box-shadow: 0 10px 28px rgba(20, 36, 26, 0.08);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    border: 1px solid #f0f0f0;
+    min-height: 400px;
 }
 
 .food-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 18px 36px rgba(20, 36, 26, 0.14);
+    box-shadow: 0 14px 36px rgba(0,0,0,0.11);
 }
 
-.food-card img {
+.card-img-wrapper {
+    position: relative;
     width: 100%;
-    height: 220px;
+    height: 190px;
+    overflow: hidden;
+    background: #f0f4f0;
+    flex-shrink: 0;
+}
+
+.card-img-wrapper img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    background: linear-gradient(135deg, #e3ece4 0%, #f3f7f3 100%);
+    display: block;
+    transition: transform 0.4s ease;
+}
+
+.food-card:hover .card-img-wrapper img {
+    transform: scale(1.06);
+}
+
+/* Claimed badge on image */
+.badge-claimed {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(57, 73, 171, 0.88);
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 3px 11px;
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
+    text-transform: uppercase;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    font-family: inherit;
 }
 
 .food-card .card-body {
+    padding: 1.1rem 1rem 1.2rem;
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
     flex: 1;
-    padding: 1.25rem;
+    gap: 0.5rem;
 }
 
 .food-card .card-title {
-    margin: 0;
-    font-size: 1.2rem;
-    font-weight: 800;
-    color: #173b25;
-    line-height: 1.25;
-}
-
-.food-card .card-text {
-    margin: 0;
-    font-size: 0.95rem;
-    color: #5f6d63;
-}
-
-.food-card .card-text strong {
-    color: #198754;
+    font-size: 1rem;
     font-weight: 700;
+    color: #1a2e1a;
+    margin: 0 0 0.2rem;
+    line-height: 1.35;
 }
 
-.card-details {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.75rem;
-    padding: 0.9rem 0;
-    border-top: 1px solid #edf2ee;
-    border-bottom: 1px solid #edf2ee;
+.card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.28rem;
 }
 
-.card-details p {
-    margin: 0;
-    font-size: 0.9rem;
-    color: #5f6d63;
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.78rem;
+    color: #555;
 }
 
-.card-details p strong {
-    color: #198754;
+.meta-item svg {
+    flex-shrink: 0;
+    width: 13px;
+    height: 13px;
+    color: #888;
 }
 
-.card-notes {
+/* Notes quote block */
+.card-quote {
+    border-left: 3px solid #197a3a;
+    padding: 0.45rem 0.7rem;
+    background: #f4faf6;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.77rem;
+    color: #4a6a5a;
+    font-style: italic;
+    line-height: 1.55;
     flex: 1;
-    padding-top: 0.25rem;
-    color: #5f6d63;
 }
 
-.claim-food-btn {
-    margin-top: auto;
+/* Collect / mark collected button */
+.btn-collect {
+    display: block;
     width: 100%;
-    border-radius: 999px;
-    padding: 0.75rem 1rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, #198754 0%, #146c43 100%);
+    background: #197a3a;
+    color: #fff;
     border: none;
-    box-shadow: 0 10px 18px rgba(25, 135, 84, 0.2);
+    border-radius: 10px;
+    padding: 0.68rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    margin-top: auto;
+    letter-spacing: 0.15px;
+    font-family: inherit;
 }
 
-.claim-food-btn:hover {
-    filter: brightness(1.03);
+.btn-collect:hover {
+    background: #155e2d;
+    box-shadow: 0 6px 18px rgba(25, 122, 58, 0.35);
     transform: translateY(-1px);
 }
 
-#noFoodsMessage {
+.btn-collect:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* ── Impact stats strip ── */
+.impact-strip {
+    max-width: 1280px;
+    margin: 0 auto 3.5rem;
+    padding: 0 1rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.impact-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-radius: 14px;
+    padding: 1.1rem 1.25rem;
+    font-family: inherit;
+}
+
+.impact-card:nth-child(1) { background: #c8ecd5; }
+.impact-card:nth-child(2) { background: #dce8f8; }
+.impact-card:nth-child(3) { background: #c8d4c8; }
+
+.impact-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.impact-icon svg {
+    width: 22px;
+    height: 22px;
+    color: #1a2e1a;
+}
+
+.impact-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.impact-text .impact-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #3a5a3a;
+}
+
+.impact-text .impact-value {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #1a2e1a;
+    line-height: 1.2;
+}
+
+/* ── Alert error ── */
+.alert-error {
     grid-column: 1 / -1;
-    text-align: center;
-    padding: 4.5rem 1.5rem;
-    color: #6d7b71;
-    font-size: 1.05rem;
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
     font-weight: 600;
-    background: rgba(255, 255, 255, 0.75);
-    border: 1px dashed #cfe2d5;
-    border-radius: 18px;
-    box-shadow: 0 10px 24px rgba(20, 36, 26, 0.05);
+    font-size: 0.875rem;
 }
 
-#noFoodsMessage::before {
-    content: '🍽️';
-    display: block;
-    font-size: 3rem;
-    margin-bottom: 1rem;
-}
-
-@media (max-width: 992px) {
-
-    #displayClaimedfoods,
-    #displayClaimedFoods {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 18px;
-        padding: 0 15px 32px;
-    }
-
-    .foods-title {
-        font-size: 1.75rem;
-        margin: 2rem 0 1.5rem;
-    }
-}
-
+/* ── Responsive ── */
 @media (max-width: 768px) {
-    .foods-title {
-        font-size: 1.6rem;
-        margin: 1.75rem 0 1.25rem;
+    .claimed-header {
+        flex-direction: column;
+        gap: 0.75rem;
     }
 
-    #displayClaimedfoods,
-    #displayClaimedFoods {
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    .claimed-header-text h1 {
+        font-size: 1.65rem;
+    }
+
+    #displayClaimedfoods {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
         gap: 14px;
-        padding: 0 12px 28px;
     }
 
-    .food-card {
-        min-height: 430px;
-    }
-
-    .food-card img {
-        height: 200px;
-    }
-
-    .food-card .card-body {
-        padding: 1rem;
-    }
-
-    .card-details {
+    .impact-strip {
         grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 480px) {
-    .foods-title {
-        font-size: 1.45rem;
-    }
-
-    #displayClaimedfoods,
-    #displayClaimedFoods {
+    .impact-strip {
         grid-template-columns: 1fr;
-        padding: 0 10px 24px;
     }
-
-    .food-card {
-        min-height: auto;
-    }
-
-    .food-card img {
-        height: 190px;
-    }
-}
-
-/* Loader styles */
-.loader-inline {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 100px 20px;
-    text-align: center;
-    grid-column: 1 / -1;
-    width: 100%;
-}
-
-.spinner-inline {
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #28a745;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 1s linear infinite;
-    margin-bottom: 20px;
-}
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-.loader-inline p {
-    color: #28a745;
-    font-size: 16px;
-    font-weight: 500;
 }

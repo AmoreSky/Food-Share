@@ -1,305 +1,382 @@
-/* Message Display - Inline in Form */
-#messageBox {
-    padding: 14px 16px;
-    margin: 0 0 20px 0;
-    border-radius: 8px;
-    font-weight: 600;
-    display: none;
-    font-size: 14px;
-    animation: fadeIn 0.3s ease-in-out;
-    border-left: 4px solid;
+/* ============================================================
+   Post Food Page Styles — Food Share
+   ============================================================ */
+
+/* ── Page shell ── */
+html, body {
+    height: 100%;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        max-height: 0;
-    }
-
-    to {
-        opacity: 1;
-        max-height: 200px;
-    }
+body {
+    background-color: #f0f4f0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
-#messageBox.show {
-    display: block;
-}
+nav { flex-shrink: 0; }
 
-#messageBox.success {
-    background-color: #d4edda;
-    color: #155724;
-    border-color: #28a745;
-}
-
-#messageBox.error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border-color: #dc3545;
-}
-
-/* Form styling */
-#form-group {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafb 100%);
-    padding: 35px;
-    border-radius: 12px;
-    max-width: 90%;
-    width: 100%;
-    margin: 20px auto;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    border: 1px solid #e8eaed;
-    position: relative;
-    min-height: 500px;
-    box-sizing: border-box;
-}
-
-#form-content {
-    display: block;
-}
-
-#form-content.hidden {
-    display: none;
-}
-
-#form-group h3 {
+/* ── Page header ── */
+.post-page-header {
     text-align: center;
-    margin-bottom: 30px;
-    color: #28a745;
-    font-size: 26px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
+    padding: 2.75rem 1rem 1.5rem;
 }
 
-#form-group input,
-#form-group textarea {
-    width: 100%;
-    padding: 12px 14px;
-    margin: 8px 0 18px 0;
-    border: 2px solid #e8eaed;
-    border-radius: 8px;
-    font-size: 14px;
-    font-family: inherit;
-    transition: all 0.2s ease;
+.post-page-header h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #197a3a;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.45rem;
+    line-height: 1.2;
+}
+
+.post-page-header p {
+    font-size: 0.95rem;
+    color: #5a7a6a;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* ── Form card ── */
+#form-group {
+    background: #ffffff;
+    border-radius: 18px;
+    max-width: 600px;
+    width: calc(100% - 2rem);
+    margin: 0 auto 3rem;
+    padding: 2rem 2.25rem 2.25rem;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
+    border: 1px solid #e4ebe4;
+    position: relative;
     box-sizing: border-box;
 }
 
-#form-group label {
+/* ── Image upload area ── */
+.upload-label-wrap {
+    margin-bottom: 1.5rem;
+}
+
+.upload-field-label {
     display: block;
-    margin: 20px 0 8px 0;
+    font-size: 0.72rem;
     font-weight: 700;
-    color: #2c3e50;
-    font-size: 12px;
+    color: #666;
+    letter-spacing: 0.6px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    margin-bottom: 0.55rem;
 }
 
-#form-group input:focus,
-#form-group textarea:focus {
-    outline: none;
-    border-color: #28a745;
-    box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.08);
-    background-color: #fafbff;
-}
-
-#form-group textarea {
-    resize: vertical;
-    min-height: 100px;
-    font-family: inherit;
-}
-
-#form-group button {
-    width: 100%;
-    padding: 14px 16px;
-    margin-top: 25px;
-    font-size: 16px;
-    font-weight: 700;
-    border-radius: 8px;
-    border: none;
-    transition: all 0.2s ease;
-    letter-spacing: 0.3px;
-    cursor: pointer;
-}
-
-#form-group button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(40, 167, 69, 0.25);
-}
-
-#form-group button:active {
-    transform: translateY(0);
-}
-
-/* Post Loader */
-#post-loader {
+.upload-drop-zone {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    position: absolute;
-    top: 35px;
-    left: 35px;
-    right: 35px;
-    bottom: 35px;
-    background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
-    border-radius: 12px;
-    gap: 30px;
-    z-index: 10;
-    padding: 60px 40px;
-    border: 2px solid #28a745;
-    box-shadow: 0 8px 24px rgba(40, 167, 69, 0.15);
+    gap: 0.6rem;
+    background: #e8eff8;
+    border: 2px dashed #b8cfe8;
+    border-radius: 14px;
+    min-height: 230px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    position: relative;
+    overflow: hidden;
 }
 
-#post-loader.hidden {
-    display: none;
+.upload-drop-zone:hover,
+.upload-drop-zone.dragover {
+    background: #dce8f5;
+    border-color: #197a3a;
 }
 
-.food-loader-icon {
-    font-size: 80px;
-    animation: float 2.5s ease-in-out infinite;
-    filter: drop-shadow(0 4px 15px rgba(40, 167, 69, 0.2));
+/* Upload icon */
+.upload-icon {
+    color: #197a3a;
+    opacity: 0.85;
 }
 
-@keyframes float {
-
-    0%,
-    100% {
-        transform: translateY(0px);
-        opacity: 1;
-    }
-
-    50% {
-        transform: translateY(-25px);
-        opacity: 0.8;
-    }
+.upload-drop-zone strong {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #1a2e1a;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
-#post-loader p {
-    color: #28a745;
-    font-size: 24px;
-    font-weight: 700;
-    margin: 0;
-    letter-spacing: -0.5px;
+.upload-drop-zone span {
+    font-size: 0.78rem;
+    color: #7a9aaa;
     text-align: center;
-    line-height: 1.4;
 }
 
-#post-loader::before {
-    content: '';
+/* Hidden real file input */
+#food_image {
     position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at center, rgba(40, 167, 69, 0.05) 0%, transparent 70%);
-    border-radius: 12px;
-    pointer-events: none;
 }
 
+/* Image preview (shown after selection) */
 #image_preview {
-    max-width: 100%;
-    max-height: 500px;
-    margin-bottom: 25px;
-    border-radius: 8px;
-    display: none;
-    border: 2px solid #e8eaed;
-    object-fit: cover;
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    position: absolute;
+    inset: 0;
+    display: none;
 }
 
 #image_preview.show {
     display: block;
 }
 
-.file-label-wrapper {
-    margin-bottom: 20px;
+/* When preview is shown, dim the overlay text */
+.upload-drop-zone.has-image .upload-overlay {
+    display: none;
 }
 
-.file-label-wrapper .btn {
+/* ── Form fields ── */
+.form-field {
+    margin-bottom: 1.25rem;
+}
+
+.form-field label {
     display: block;
-    margin: 0;
-    width: 100%;
-    padding: 12px 14px;
+    font-size: 0.72rem;
     font-weight: 700;
-    border-radius: 8px;
-    font-size: 14px;
-    transition: all 0.2s ease;
+    color: #666;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    margin-bottom: 0.45rem;
 }
 
-.file-label-wrapper .btn:hover {
+.form-field input,
+.form-field textarea {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    border: 1.5px solid #dde8dd;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    color: #1a2e1a;
+    background: #fff;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+    border-color: #197a3a;
+    box-shadow: 0 0 0 3px rgba(25, 122, 58, 0.1);
+    background: #fafffe;
+}
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+    color: #b0c0b0;
+}
+
+/* Location field with pin icon */
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-with-icon svg {
+    position: absolute;
+    left: 0.75rem;
+    color: #aaa;
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    pointer-events: none;
+}
+
+.input-with-icon input {
+    padding-left: 2.2rem;
+}
+
+/* Quantity field with QTY chip */
+.input-with-chip {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-with-chip input {
+    padding-right: 3.5rem;
+}
+
+.qty-chip {
+    position: absolute;
+    right: 0.6rem;
+    background: #197a3a;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    pointer-events: none;
+    font-family: inherit;
+}
+
+/* Two-column row for Quantity + Phone */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+/* Textarea */
+.form-field textarea {
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.6;
+}
+
+/* ── Feedback message box ── */
+#messageBox {
+    padding: 12px 16px;
+    border-radius: 9px;
+    font-weight: 600;
+    display: none;
+    font-size: 0.875rem;
+    animation: fadeIn 0.3s ease;
+    border-left: 4px solid;
+    margin-bottom: 1rem;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+#messageBox.show    { display: block; }
+#messageBox.success { background: #d4edda; color: #155724; border-color: #28a745; }
+#messageBox.error   { background: #f8d7da; color: #721c24; border-color: #dc3545; }
+
+/* ── Post button ── */
+.btn-post-food {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    width: 100%;
+    background: #197a3a;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 0.9rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    letter-spacing: 0.2px;
+    font-family: inherit;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    margin-top: 0.5rem;
+}
+
+.btn-post-food:hover {
+    background: #155e2d;
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 24px rgba(25, 122, 58, 0.35);
 }
 
-/* Remove scroll from page */
-html,
-body {
-    overflow: hidden;
-    height: 100%;
+.btn-post-food:active {
+    transform: translateY(0);
+    box-shadow: none;
 }
 
-body {
+.btn-post-food svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Disclaimer below button */
+.post-disclaimer {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #9ab5a0;
+    margin-top: 0.75rem;
+    line-height: 1.5;
+}
+
+.post-disclaimer a {
+    color: #197a3a;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    transition: text-decoration-color 0.2s;
+}
+
+.post-disclaimer a:hover {
+    text-decoration-color: #197a3a;
+}
+
+/* ── Loading overlay ── */
+#post-loader {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+    border-radius: 18px;
+    gap: 1.5rem;
+    z-index: 10;
+    padding: 3rem 2rem;
+    border: 2px solid #b8dfc7;
 }
 
-nav {
-    flex-shrink: 0;
+#post-loader.hidden { display: none; }
+
+.food-loader-icon {
+    font-size: 4rem;
+    animation: float 2.5s ease-in-out infinite;
+    filter: drop-shadow(0 4px 15px rgba(40, 167, 69, 0.2));
 }
 
-#form-group {
-    flex: 1;
-    overflow-y: auto;
-    margin-top: 20px;
-    margin-bottom: 20px;
+@keyframes float {
+    0%, 100% { transform: translateY(0); opacity: 1; }
+    50%       { transform: translateY(-18px); opacity: 0.8; }
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+#post-loader p {
+    color: #197a3a;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+    text-align: center;
+}
+
+#form-content { display: block; }
+#form-content.hidden { display: none; }
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
     #form-group {
-        margin: 15px;
-        padding: 20px;
-        max-width: calc(100% - 30px);
+        padding: 1.5rem 1.25rem 1.75rem;
+        border-radius: 14px;
     }
 
-    #form-group h3 {
-        font-size: 20px;
-        margin-bottom: 20px;
+    .form-row {
+        grid-template-columns: 1fr;
     }
 
-    .navbar {
-        padding: 0.5rem 0;
+    .post-page-header h1 {
+        font-size: 1.75rem;
     }
 
-    .navbar-brand {
-        font-size: 1.2rem;
-    }
-}
-
-@media (max-width: 480px) {
-    #form-group {
-        margin: 10px;
-        padding: 15px;
-        max-width: calc(100% - 20px);
-    }
-
-    #form-group h3 {
-        font-size: 18px;
-    }
-
-    #form-group input,
-    #form-group textarea {
-        padding: 10px;
-        margin: 8px 0;
-        font-size: 16px;
-    }
-
-    #form-group button {
-        padding: 10px;
-        margin-top: 10px;
-    }
-
-    #messageBox {
-        padding: 12px 14px;
-        font-size: 13px;
-        margin: 10px 0 12px 0;
+    .upload-drop-zone {
+        min-height: 180px;
     }
 }

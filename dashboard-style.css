@@ -120,7 +120,7 @@ body {
 }
 
 .btn-signout {
-    background: #197a3a;
+    background: #c0392b;
     color: #fff !important;
     border: none;
     padding: 0.4rem 1.1rem;
@@ -134,11 +134,12 @@ body {
     align-items: center;
     gap: 0.35rem;
     letter-spacing: 0.1px;
+    white-space: nowrap;
 }
 
 .btn-signout:hover {
-    background: #155e2d;
-    box-shadow: 0 4px 14px rgba(25, 122, 58, 0.35);
+    background: #96281b;
+    box-shadow: 0 4px 14px rgba(192, 57, 43, 0.4);
     transform: translateY(-1px);
 }
 
@@ -814,22 +815,24 @@ body {
         display: none;
     }
 
+    /* Sign out stays visible on all screen sizes — just shrinks on mobile */
     .nav-actions .btn-signout {
-        display: none; /* sign out is replaced by bottom nav on mobile */
+        padding: 0.35rem 0.75rem;
+        font-size: 0.78rem;
     }
 
     /* ── Welcome banner ── */
     .welcome-banner {
-        margin: 1rem 1rem 0;
+        margin: 1.5rem 1rem 0;
         padding: 0;
         border-radius: 14px;
     }
 
     .welcome-banner-inner {
-        padding: 1.5rem 1.25rem;
+        padding: 2rem 1.5rem;
         flex-direction: column;
         align-items: flex-start;
-        gap: 0.5rem;
+        gap: 0.75rem;
     }
 
     .welcome-illustration {
@@ -842,15 +845,15 @@ body {
 
     /* ── Foods section ── */
     .foods-section {
-        margin: 1.5rem auto 2rem;
+        margin: 2.5rem auto 2.5rem;
         padding: 0 1rem;
     }
 
     .foods-header {
         flex-direction: column;
         align-items: stretch;
-        gap: 0.75rem;
-        margin-bottom: 1.5rem;
+        gap: 1rem;
+        margin-bottom: 2rem;
     }
 
     .foods-controls {
@@ -875,15 +878,39 @@ body {
         padding: 0.5rem 1rem;
     }
 
-    /* Single column cards on mobile */
+    /* 2-column card grid on mobile */
     #displayPostedFoods {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
         gap: 14px;
+    }
+
+    /* Compact card sizing for 2-col mobile layout */
+    .card-img-wrapper {
+        height: 190px;
+    }
+
+    .food-card .card-body {
+        padding: 0.75rem 0.75rem 1rem;
+    }
+
+    .food-card .card-title {
+        font-size: 0.88rem;
+    }
+
+    .card-meta .meta-item,
+    .card-details p {
+        font-size: 0.72rem;
+    }
+
+    .claim-food-btn,
+    .btn-collect {
+        font-size: 0.78rem;
+        padding: 0.55rem 0.75rem;
     }
 
     /* ── Stats section — stacked vertical in light-blue card ── */
     .stats-section {
-        margin: 0 1rem 2rem;
+        margin: 0 1rem 2.5rem;
         border-radius: 14px;
         background: #dce8f8;
         border: none;
@@ -892,14 +919,14 @@ body {
 
     .stats-inner {
         flex-direction: column;
-        padding: 1.25rem 1rem;
-        gap: 0.85rem;
+        padding: 1.75rem 1.25rem;
+        gap: 1.25rem;
     }
 
     .stat-item {
         max-width: none;
         width: 100%;
-        gap: 0.85rem;
+        gap: 1rem;
     }
 
     .stat-icon {
@@ -916,13 +943,13 @@ body {
 
     /* ── Footer ── */
     .dashboard-footer {
-        padding: 2rem 1rem 1.25rem;
+        padding: 2.5rem 1.25rem 1.5rem;
     }
 
     .footer-inner {
         grid-template-columns: 1fr;
-        gap: 1.5rem;
-        padding-bottom: 1.5rem;
+        gap: 2rem;
+        padding-bottom: 2rem;
     }
 
     /* ── FAB — lift above bottom nav ── */
@@ -935,7 +962,39 @@ body {
     }
 }
 
-/* ── Tablet (769px – 1024px) ── */
+/* ── Small phones (≤480px) — single column ── */
+@media (max-width: 480px) {
+    #displayPostedFoods {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    /* Restore full card sizing for single column */
+    .card-img-wrapper {
+        height: 200px;
+    }
+
+    .food-card .card-body {
+        padding: 1rem 1rem 1.25rem;
+    }
+
+    .food-card .card-title {
+        font-size: 1rem;
+    }
+
+    .card-meta .meta-item,
+    .card-details p {
+        font-size: 0.8rem;
+    }
+
+    .claim-food-btn,
+    .btn-collect {
+        font-size: 0.875rem;
+        padding: 0.7rem 1rem;
+    }
+}
+
+
 @media (min-width: 769px) and (max-width: 1024px) {
     .navbar .container {
         height: 60px;
@@ -956,11 +1015,11 @@ body {
     }
 
     .welcome-banner {
-        margin: 3rem 1rem 2rem;
+        margin: 3.5rem 1.5rem 2.5rem;
     }
 
     .welcome-banner-inner {
-        padding: 2rem 1.5rem;
+        padding: 2.5rem 2rem;
     }
 
     .welcome-text h1 {
@@ -968,31 +1027,50 @@ body {
     }
 
     .foods-section {
-        margin: 3rem auto 3rem;
-        padding: 0 1rem;
+        margin: 3.5rem auto 3.5rem;
+        padding: 0 1.5rem;
+    }
+
+    .foods-header {
+        margin-bottom: 2.5rem;
     }
 
     /* 2-column card grid on tablet */
     #displayPostedFoods {
         grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
+        gap: 20px;
+    }
+
+    .card-img-wrapper {
+        height: 240px;
     }
 
     .stats-section {
-        margin: 0 1rem 2.5rem;
+        margin: 0 1.5rem 3rem;
     }
 
     .stats-inner {
-        padding: 1.5rem 1rem;
-        gap: 1rem;
+        padding: 2rem 1.5rem;
+        gap: 1.5rem;
+    }
+
+    .dashboard-footer {
+        padding: 3rem 1.5rem 2rem;
     }
 
     .footer-inner {
         grid-template-columns: 1fr 1fr;
-        gap: 2rem;
+        gap: 2.5rem;
     }
 
     .footer-brand {
         grid-column: 1 / -1;
+    }
+}
+
+/* ── Mid-range screens (1025px – 1440px) — taller card images ── */
+@media (min-width: 1025px) and (max-width: 1440px) {
+    .card-img-wrapper {
+        height: 240px;
     }
 }

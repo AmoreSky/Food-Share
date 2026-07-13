@@ -20,42 +20,44 @@ body {
 /* ── Navbar ── */
 .navbar {
     background-color: #ffffff !important;
-    box-shadow: 0 1px 0 #e8eee8, 0 2px 12px rgba(0,0,0,0.04);
+    box-shadow: 0 1px 0 #d8e8d8, 0 4px 18px rgba(0,0,0,0.06);
     padding: 0 !important;
     position: sticky;
     top: 0;
     z-index: 1000;
+    border-bottom: 3px solid #197a3a;
 }
 
 .navbar .container {
     max-width: 1280px;
-    padding: 0 1rem;
+    padding: 0 1.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 68px;
+    height: 72px;
     gap: 1.5rem;
 }
 
 .logo {
     display: flex;
     align-items: center;
-    gap: 0.55rem;
+    gap: 0.6rem;
     text-decoration: none;
     flex-shrink: 0;
 }
 
 .logo img {
-    width: 30px;
-    height: 30px;
+    width: 36px;
+    height: 36px;
     object-fit: contain;
+    filter: drop-shadow(0 1px 3px rgba(25, 122, 58, 0.2));
 }
 
 .navbar-brand {
     font-weight: 800;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     color: #197a3a !important;
-    letter-spacing: -0.3px;
+    letter-spacing: -0.4px;
     text-decoration: none;
     white-space: nowrap;
 }
@@ -64,7 +66,7 @@ body {
 .nav-links {
     display: flex;
     align-items: center;
-    gap: 0.15rem;
+    gap: 0.25rem;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -73,42 +75,37 @@ body {
 }
 
 .nav-links a {
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     font-weight: 500;
-    color: #555;
+    color: #5a6a5a;
     text-decoration: none;
-    padding: 0.4rem 0.8rem;
-    border-radius: 6px;
+    padding: 0.45rem 0.95rem;
+    border-radius: 8px;
     transition: color 0.2s, background 0.2s;
     position: relative;
     white-space: nowrap;
-    border: 1.5px solid transparent;
 }
 
 .nav-links a:hover {
     color: #197a3a;
-    background: rgba(25, 122, 58, 0.06);
+    background: rgba(25, 122, 58, 0.07);
 }
 
 .nav-links a.active {
     color: #197a3a;
     font-weight: 700;
+    background: rgba(25, 122, 58, 0.06);
 }
 
 .nav-links a.active::after {
     content: '';
     position: absolute;
-    bottom: -6px;
-    left: 0.8rem;
-    right: 0.8rem;
-    height: 2.5px;
+    bottom: -3px;
+    left: 0.7rem;
+    right: 0.7rem;
+    height: 3px;
     background: #197a3a;
     border-radius: 2px;
-}
-
-/* no border on inactive nav links */
-.nav-links a:not(.active) {
-    border: none;
 }
 
 /* Navbar right actions */
@@ -123,24 +120,25 @@ body {
     background: #c0392b;
     color: #fff !important;
     border: none;
-    padding: 0.4rem 1.1rem;
+    padding: 0.6rem 1.4rem;
     border-radius: 50px;
-    font-size: 0.85rem;
-    font-weight: 600;
+    font-size: 0.9rem;
+    font-weight: 700;
     cursor: pointer;
     text-decoration: none;
     transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
+    gap: 0.4rem;
     letter-spacing: 0.1px;
     white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(192, 57, 43, 0.2);
 }
 
 .btn-signout:hover {
     background: #96281b;
-    box-shadow: 0 4px 14px rgba(192, 57, 43, 0.4);
-    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(192, 57, 43, 0.45);
+    transform: translateY(-2px);
 }
 
 .user-avatar {
@@ -472,7 +470,6 @@ body {
     text-align: center;
     transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
     margin-top: auto;
-    padding-top: 0.68rem;
     letter-spacing: 0.15px;
     font-family: inherit;
 }
@@ -713,19 +710,6 @@ body {
     color: #fff;
 }
 
-/* ── Modal Overrides ── */
-.modal-header {
-    border-bottom: 1px solid #e8f0e8;
-}
-
-.modal-title {
-    font-weight: 700;
-    color: #1a2e1a;
-}
-
-.modal-footer {
-    border-top: 1px solid #e8f0e8;
-}
 
 /* ══════════════════════════════════════════════
    BOTTOM NAVIGATION BAR (mobile only)
@@ -997,21 +981,22 @@ body {
 
 @media (min-width: 769px) and (max-width: 1024px) {
     .navbar .container {
-        height: 60px;
+        height: 64px;
         gap: 1rem;
+        padding: 0 1rem;
     }
 
     .navbar-brand {
-        font-size: 1rem;
+        font-size: 1.05rem;
     }
 
     .nav-links {
-        gap: 0;
+        gap: 0.1rem;
     }
 
     .nav-links a {
-        padding: 0.4rem 0.6rem;
-        font-size: 0.82rem;
+        padding: 0.4rem 0.65rem;
+        font-size: 0.84rem;
     }
 
     .welcome-banner {

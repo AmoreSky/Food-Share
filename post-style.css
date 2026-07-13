@@ -50,7 +50,6 @@ nav { flex-shrink: 0; }
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
     border: 1px solid #e4ebe4;
     position: relative;
-    box-sizing: border-box;
 }
 
 /* ── Image upload area ── */

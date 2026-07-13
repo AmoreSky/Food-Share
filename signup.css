@@ -218,6 +218,40 @@ body {
     transition: color 0.3s ease;
 }
 
+/* Show / hide password toggle */
+#showPassword {
+    position: absolute;
+    right: 0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.55;
+    transition: opacity 0.2s;
+    line-height: 0;
+}
+
+#showPassword:hover {
+    opacity: 1;
+}
+
+#showPassword img {
+    width: 20px;
+    height: 20px;
+    display: block;
+    pointer-events: none;
+}
+
+/* Give password input room on the right for the toggle icon */
+#password {
+    padding-right: 2.75rem;
+}
+
 .form-control {
     border: 2px solid #e8eaed;
     border-radius: 10px;

@@ -70,6 +70,9 @@
                             <input type="password" class="form-control" id="password"
                                 placeholder="Create a strong password">
                             <i class="fas fa-lock input-icon"></i>
+                            <button id="showPassword" type="button">
+                                <img src="./images/visibility_off.png" alt="" width="20px" id="visiImg">
+                            </button>
                         </div>
                     </div>
                     <button type="button" class="btn btn-success signup-btn" id="create"><span>Sign Up</span></button>
@@ -77,6 +80,7 @@
                 <div class="login-link">
                     Already have an account? <a href="login.html">Login here</a>
                 </div>
+
             </div>
         </div>
     </div>
@@ -89,6 +93,7 @@
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+    let visibility = true;
 
     document.getElementById('create').addEventListener('click', () => {
         const username = document.getElementById('username').value
@@ -131,6 +136,19 @@
                     console.log(error);
                     console.log(errorMessage);
                 });
+        }
+    })
+
+    document.getElementById('showPassword').addEventListener('click', () => {
+
+        visibility = !visibility
+        if (visibility == false) {           
+            document.getElementById('visiImg').src = './images/visibility.png'
+            document.getElementById('password').type = 'text'
+        }else{
+            document.getElementById('visiImg').src = './images/visibility_off.png'
+            document.getElementById('password').type = 'password'
+
         }
     })
 </script>

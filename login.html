@@ -47,6 +47,9 @@
                         <div class="input-icon-wrapper">
                             <input type="password" class="form-control" id="password" placeholder="Enter your password">
                             <i class="fas fa-lock input-icon"></i>
+                             <button id="showPassword" type="button">
+                                <img src="./images/visibility_off.png" alt="" width="20px" id="visiImg">
+                            </button>
                         </div>
                         <div class="forgot-password">
                             <a href="#">Forgot password?</a>
@@ -65,7 +68,8 @@
 <script type="module">
     import { auth } from "./script.js";
     import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
-
+    
+    let visibility = true;
     document.getElementById('signin').addEventListener('click', () => {
         const email = document.getElementById('email').value
         const password = document.getElementById('password').value
@@ -107,6 +111,17 @@
                 </div>`
                 }
             })
+    })
+    document.getElementById('showPassword').addEventListener('click', () => {
+        visibility = !visibility
+        if (visibility == false) {           
+            document.getElementById('visiImg').src = './images/visibility.png'
+            document.getElementById('password').type = 'text'
+        }else{
+            document.getElementById('visiImg').src = './images/visibility_off.png'
+            document.getElementById('password').type = 'password'
+
+        }
     })
 </script>
 

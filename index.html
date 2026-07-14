@@ -20,10 +20,22 @@
                 <img src="images/give-food.png" alt="food share">
                 <a class="navbar-brand" href="index.html">FOOD SHARE</a>
             </div>
-            <div class="d-flex gap-3" role="search">
-                <a href="login.html" class="btn btn-outline-success"><span>Login</span></a>
-                <a href="signup.html" class="btn btn-success"><span>Get Started</span></a>
+            <!-- Desktop nav buttons -->
+            <div class="nav-actions" role="navigation">
+                <a href="login.html" class="btn btn-outline-success" id="nav-login-btn">Login</a>
+                <a href="signup.html" class="btn btn-success" id="nav-signup-btn">Get Started</a>
             </div>
+            <!-- Hamburger (mobile only) -->
+            <button class="nav-toggler" id="navToggler" aria-label="Toggle navigation" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <!-- Mobile slide-down menu -->
+        <div class="mobile-nav-menu" id="mobileMenu" role="navigation">
+            <a href="login.html" class="btn btn-outline-success" id="mobile-login-btn">Login</a>
+            <a href="signup.html" class="btn btn-success" id="mobile-signup-btn">Get Started</a>
         </div>
     </nav>
 
@@ -88,9 +100,25 @@
         <div>© <span id="year"></span> FoodShare</div>
         <div>Built for Zero Hunger Initiative</div>
     </section>
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+        const toggler = document.getElementById('navToggler');
+        const menu    = document.getElementById('mobileMenu');
+        if (toggler && menu) {
+            toggler.addEventListener('click', () => {
+                const isOpen = menu.classList.toggle('open');
+                toggler.classList.toggle('open', isOpen);
+                toggler.setAttribute('aria-expanded', isOpen);
+            });
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!toggler.contains(e.target) && !menu.contains(e.target)) {
+                    menu.classList.remove('open');
+                    toggler.classList.remove('open');
+                    toggler.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+    </script>
 </body>
-<script>
-    document.getElementById('year').textContent = new Date().getFullYear()
-</script>
-
 </html>

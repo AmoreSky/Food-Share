@@ -14,40 +14,132 @@ body {
 
 /* Navbar */
 .navbar {
-    padding: 1.25rem 0;
+    padding: 0;
     background: #ffffff !important;
     border-bottom: 1px solid #f0f0f0;
     position: sticky;
     top: 0;
     z-index: 1000;
-    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 16px rgba(25, 135, 84, 0.07);
 }
 
 .navbar .container {
     max-width: 1280px;
     padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
 }
-
 
 .logo {
     display: flex;
     align-items: center;
     gap: 0.85rem;
     cursor: pointer;
+    text-decoration: none;
+    flex-shrink: 0;
 }
 
 .logo img {
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
     filter: drop-shadow(0 2px 4px rgba(25, 135, 84, 0.15));
 }
 
 .navbar-brand {
     font-weight: 800;
-    font-size: 1.55rem;
+    font-size: 1.45rem;
     color: #198754 !important;
     margin: 0;
     letter-spacing: -0.5px;
+    text-decoration: none;
+}
+
+/* Hamburger toggle button (mobile only) */
+.nav-toggler {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    border-radius: 8px;
+    transition: background 0.2s;
+    z-index: 1101;
+}
+
+.nav-toggler:hover {
+    background: rgba(25, 135, 84, 0.07);
+}
+
+.nav-toggler span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: #198754;
+    border-radius: 2px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+}
+
+.nav-toggler.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.nav-toggler.open span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.nav-toggler.open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Desktop nav actions */
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+
+/* Mobile slide-down menu */
+.mobile-nav-menu {
+    display: none;
+    position: fixed;
+    top: 72px;
+    left: 0;
+    right: 0;
+    background: #fff;
+    padding: 1rem 1.25rem;
+    border-bottom: 3px solid #198754;
+    box-shadow: 0 8px 32px rgba(25, 135, 84, 0.12);
+    z-index: 1099;
+    flex-direction: row;
+    gap: 0.65rem;
+    justify-content: flex-end;
+    animation: menuSlideDown 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-nav-menu.open {
+    display: flex;
+}
+
+@keyframes menuSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Hero Section */
@@ -323,110 +415,120 @@ body {
     font-size: 0.95rem;
 }
 
-/* Buttons */
-.btn {
-    padding: 0.75rem 1.75rem;
-    font-weight: 600;
-    border-radius: 50px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    font-size: 0.95rem;
-    border-width: 2px;
-    text-decoration: none;
+/* ── Custom Buttons ── */
+/* Base pill button — reset Bootstrap defaults */
+.btn,
+.btn-success,
+.btn-outline-success {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.65rem 1.6rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    font-family: inherit;
+    border-radius: 50px;
+    border: 2px solid transparent;
+    text-decoration: none;
+    letter-spacing: 0.25px;
+    cursor: pointer;
     position: relative;
     overflow: hidden;
-    letter-spacing: 0.3px;
+    white-space: nowrap;
+    transition: background 0.28s ease, color 0.28s ease,
+                border-color 0.28s ease, box-shadow 0.28s ease,
+                transform 0.2s ease;
 }
 
-.btn::after {
-    content: '→';
-    position: absolute;
-    right: 1.5rem;
-    opacity: 0;
-    transform: translateX(-10px);
-    transition: all 0.3s ease;
-}
-
-.btn:hover::after {
-    opacity: 1;
-    transform: translateX(0);
-}
-
-.btn:hover {
-    padding-right: 2.5rem;
-}
-
-.btn-success {
-    background: #198754;
-    border-color: #198754;
-    box-shadow: 0 4px 15px rgba(25, 135, 84, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    color: #fff;
-}
-
-.btn-success::before {
+/* Shimmer sweep on hover */
+.btn::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    background: linear-gradient(110deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.22) 50%,
+        transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 0.55s ease;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.btn:hover::before {
+    transform: translateX(100%);
+}
+
+.btn > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Filled green button */
+.btn-success {
+    background: linear-gradient(135deg, #20a060 0%, #198754 55%, #146c43 100%);
+    border-color: transparent;
+    color: #fff !important;
+    box-shadow: 0 4px 14px rgba(25, 135, 84, 0.32),
+                inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 .btn-success:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(25, 135, 84, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    background: #157347;
-    border-color: #157347;
-}
-
-.btn-success:hover::before {
-    opacity: 1;
+    background: linear-gradient(135deg, #24b56e 0%, #1e9c60 55%, #17804f 100%);
+    box-shadow: 0 8px 24px rgba(25, 135, 84, 0.45),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    color: #fff !important;
+    border-color: transparent;
 }
 
 .btn-success:active {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 15px rgba(25, 135, 84, 0.3);
+    transform: translateY(0);
+    box-shadow: 0 3px 10px rgba(25, 135, 84, 0.3);
 }
 
+/* Ghost / outline button */
 .btn-outline-success {
-    color: #198754;
+    background: transparent;
     border-color: #198754;
-    background-color: rgba(25, 135, 84, 0.03);
-    backdrop-filter: blur(10px);
-}
-
-.btn-outline-success::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, #198754 0%, #146c43 100%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    border-radius: 50px;
+    color: #198754 !important;
+    box-shadow: none;
 }
 
 .btn-outline-success:hover {
-    color: #fff;
+    background: #198754;
     border-color: #198754;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(25, 135, 84, 0.35);
+    color: #fff !important;
+    box-shadow: 0 6px 20px rgba(25, 135, 84, 0.3);
+    transform: translateY(-2px);
 }
 
-.btn-outline-success:hover::before {
-    opacity: 1;
+.btn-outline-success:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 10px rgba(25, 135, 84, 0.2);
 }
 
+/* Keep spans/icons above shimmer overlay */
 .btn-success span,
 .btn-outline-success span {
     position: relative;
     z-index: 1;
 }
 
-.btn-outline-success:active {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 15px rgba(25, 135, 84, 0.25);
+/* Navbar-specific button sizes (slightly more compact) */
+.nav-actions .btn,
+.nav-actions .btn-success,
+.nav-actions .btn-outline-success {
+    padding: 0.5rem 1.25rem;
+    font-size: 0.875rem;
+}
+
+/* Mobile menu buttons — side by side */
+.mobile-nav-menu .btn {
+    padding: 0.55rem 1.2rem;
+    font-size: 0.875rem;
+    flex: 0 0 auto;
 }
 
 /* Responsive Design */
@@ -449,11 +551,27 @@ body {
     }
 }
 
+/* ── Mobile layout (≤ 768px) ── */
 @media (max-width: 768px) {
+    /* Mobile navbar: show hamburger, hide desktop buttons */
     .navbar .container {
-        padding: 0 1.5rem;
+        padding: 0 1.25rem;
+        height: 64px;
     }
 
+    .mobile-nav-menu {
+        top: 64px;
+    }
+
+    .nav-actions {
+        display: none;
+    }
+
+    .nav-toggler {
+        display: flex;
+    }
+
+    /* Hero */
     #hero_section {
         min-height: auto;
     }
@@ -513,7 +631,7 @@ body {
         max-width: 450px;
     }
 
-    #impact>div {
+    #impact > div {
         font-size: 1.15rem;
     }
 

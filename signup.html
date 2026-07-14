@@ -16,6 +16,12 @@
 </head>
 
 <body>
+    <div class="page-loader" id="pageLoader" aria-live="polite" aria-hidden="true">
+        <div class="page-loader-card">
+            <div class="page-loader-spinner" aria-hidden="true"></div>
+            <div class="page-loader-text" id="pageLoaderText">Redirecting to dashboard...</div>
+        </div>
+    </div>
     <div class="signup-wrapper">
         <div class="signup-image-side">
             <div class="image-content">
@@ -50,6 +56,13 @@
                 <p class="signup-subtitle">Join our community and start making a difference</p>
                 <div id="message"></div>
                 <form id="signupForm">
+                    <button type="button" class="google-btn" id="googleSignup">
+                        <i class="fab fa-google"></i>
+                        <span>Continue with Google</span>
+                    </button>
+                    <div class="auth-divider">
+                        <span>or sign up with email</span>
+                    </div>
                     <div class="form-group">
                         <label for="username" class="form-label">Username</label>
                         <div class="input-icon-wrapper">
@@ -88,69 +101,120 @@
 
 <script type="module">
     import { auth, db } from "./script.js";
-    import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+    import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
     import { doc, setDoc } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+    const provider = new GoogleAuthProvider();
     let visibility = true;
 
-    document.getElementById('create').addEventListener('click', () => {
-        const username = document.getElementById('username').value
-        const email = document.getElementById('email').value
-        const password = document.getElementById('password').value
+    const messageDiv = document.getElementById('message');
+    const pageLoader = document.getElementById('pageLoader');
+    const pageLoaderText = document.getElementById('pageLoaderText');
 
-        if (username.trim() == '' || email.trim() == '' || password.trim() == '') {
-            document.getElementById('message').innerHTML = `<div class="alert alert-danger" role="alert">
-                                     Fill in all inputs!
-                                </div>`
+    const showMessage = (markup) => {
+        messageDiv.innerHTML = markup;
+    };
+
+    const showLoader = (text) => {
+        pageLoaderText.textContent = text;
+        pageLoader.classList.add('is-visible');
+        pageLoader.setAttribute('aria-hidden', 'false');
+    };
+
+    const hideLoader = () => {
+        pageLoader.classList.remove('is-visible');
+        pageLoader.setAttribute('aria-hidden', 'true');
+    };
+
+    document.getElementById('googleSignup').addEventListener('click', () => {
+        showLoader('Creating your account with Google...');
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                const user = result.user;
+
+                return setDoc(doc(db, 'users', user.uid), {
+                    username: user.displayName || user.email.split('@')[0],
+                    email: user.email,
+                    userId: user.uid,
+                    authProvider: 'google'
+                }, { merge: true });
+            })
+            .then(() => {
+                showMessage(`<div class="alert alert-success" role="alert">
+                    🎉 Google signup successful! Redirecting to dashboard...
+                </div>`);
+                showLoader('Redirecting to dashboard...');
+                window.location.href = './dashboard.html';
+            })
+            .catch((error) => {
+                hideLoader();
+                showMessage(`<div class="alert alert-danger" role="alert">
+                    ❌ Google signup failed
+                    </div>`);
+
+                console.log(error.message, error.code);
+
+            });
+    });
+
+    document.getElementById('create').addEventListener('click', () => {
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        if (username.trim() === '' || email.trim() === '' || password.trim() === '') {
+            showMessage(`<div class="alert alert-danger" role="alert">
+                Fill in all inputs!
+            </div>`);
         } else if (!emailPattern.test(email)) {
-            document.getElementById('message').innerHTML = `<div class="alert alert-danger" role="alert">
-                                     Inavlid email!
-                                </div>`
+            showMessage(`<div class="alert alert-danger" role="alert">
+                Invalid email!
+            </div>`);
         } else if (!passwordPattern.test(password)) {
-            document.getElementById('message').innerHTML = `<div class="alert alert-danger" role="alert">
-                                     Make sure your password is at least one Uppercase, lowercase, number and special character and a minimum of 8 characters!
-                                </div>`
+            showMessage(`<div class="alert alert-danger" role="alert">
+                Make sure your password has upper and lower case letters, a number, a special character, and at least 8 characters.
+            </div>`);
         } else {
+            showLoader('Creating your account...');
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     const user = userCredential.user;
 
                     return setDoc(doc(db, 'users', user.uid), {
-                        username, email, userId: user.uid
+                        username,
+                        email,
+                        userId: user.uid,
+                        authProvider: 'email'
                     });
                 })
                 .then(() => {
-                    console.log("Document written successfully");
-                    document.getElementById('message').innerHTML = `<div class="alert alert-success" role="alert">
-                                🎉 Registration successful! Redirecting to login...
-                            </div>`
-                    setTimeout(() => {
-                        window.location.href = './login.html'
-                    }, 1000)
+                    showMessage(`<div class="alert alert-success" role="alert">
+                        🎉 Registration successful! Redirecting to login...
+                    </div>`);
+                    window.location.href = './login.html';
                 })
                 .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    console.log(error);
-                    console.log(errorMessage);
+                    hideLoader();
+                    showMessage(`<div class="alert alert-danger" role="alert">
+                        ❌ Signup failed: ${error.message}
+                    </div>`);
                 });
         }
-    })
+    });
 
     document.getElementById('showPassword').addEventListener('click', () => {
+        visibility = !visibility;
 
-        visibility = !visibility
-        if (visibility == false) {           
-            document.getElementById('visiImg').src = './images/visibility.png'
-            document.getElementById('password').type = 'text'
-        }else{
-            document.getElementById('visiImg').src = './images/visibility_off.png'
-            document.getElementById('password').type = 'password'
-
+        if (visibility === false) {
+            document.getElementById('visiImg').src = './images/visibility.png';
+            document.getElementById('password').type = 'text';
+        } else {
+            document.getElementById('visiImg').src = './images/visibility_off.png';
+            document.getElementById('password').type = 'password';
         }
-    })
+    });
 </script>
 
 </html>

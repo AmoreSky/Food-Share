@@ -16,6 +16,12 @@
 </head>
 
 <body>
+    <div class="page-loader" id="pageLoader" aria-live="polite" aria-hidden="true">
+        <div class="page-loader-card">
+            <div class="page-loader-spinner" aria-hidden="true"></div>
+            <div class="page-loader-text" id="pageLoaderText">Redirecting to dashboard...</div>
+        </div>
+    </div>
     <div class="login-wrapper">
         <div class="login-image-side">
             <div class="image-content">
@@ -35,6 +41,13 @@
                 <p class="login-subtitle">Enter your credentials to access your account</p>
                 <div id="message"></div>
                 <form id="loginForm">
+                    <button type="button" class="google-btn" id="googleSignin">
+                        <i class="fab fa-google"></i>
+                        <span>Continue with Google</span>
+                    </button>
+                    <div class="auth-divider">
+                        <span>or sign in with email</span>
+                    </div>
                     <div class="form-group">
                         <label for="email" class="form-label">Email</label>
                         <div class="input-icon-wrapper">
@@ -47,7 +60,7 @@
                         <div class="input-icon-wrapper">
                             <input type="password" class="form-control" id="password" placeholder="Enter your password">
                             <i class="fas fa-lock input-icon"></i>
-                             <button id="showPassword" type="button">
+                            <button id="showPassword" type="button">
                                 <img src="./images/visibility_off.png" alt="" width="20px" id="visiImg">
                             </button>
                         </div>
@@ -66,58 +79,111 @@
 </body>
 
 <script type="module">
-    import { auth } from "./script.js";
-    import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
-    
+    import { auth, db } from "./script.js";
+    import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+    import { doc, setDoc } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+    const provider = new GoogleAuthProvider();
     let visibility = true;
+    const messageDiv = document.getElementById('message');
+    const pageLoader = document.getElementById('pageLoader');
+    const pageLoaderText = document.getElementById('pageLoaderText');
+
+    const showMessage = (markup) => {
+        messageDiv.innerHTML = markup;
+    };
+
+    const showLoader = (text) => {
+        pageLoaderText.textContent = text;
+        pageLoader.classList.add('is-visible');
+        pageLoader.setAttribute('aria-hidden', 'false');
+    };
+
+    const hideLoader = () => {
+        pageLoader.classList.remove('is-visible');
+        pageLoader.setAttribute('aria-hidden', 'true');
+    };
+
+    document.getElementById('googleSignin').addEventListener('click', () => {
+        showLoader('Signing you in with Google...');
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                const user = result.user;
+
+                return setDoc(doc(db, 'users', user.uid), {
+                    username: user.displayName || user.email.split('@')[0],
+                    email: user.email,
+                    userId: user.uid,
+                    authProvider: 'google'
+                }, { merge: true });
+            })
+            .then(() => {
+                showMessage(`<div class="alert alert-success" role="alert">
+                    🎉 Google sign-in successful! Redirecting to dashboard...
+                </div>`);
+                showLoader('Redirecting to dashboard...');
+                window.location.href = 'dashboard.html';
+            })
+            .catch((error) => {
+                hideLoader();
+                showMessage(`<div class="alert alert-danger" role="alert">
+                    ❌ Google sign-in failed: ${error.message}
+                </div>`);
+            });
+    });
+
     document.getElementById('signin').addEventListener('click', () => {
         const email = document.getElementById('email').value
         const password = document.getElementById('password').value
-        const messageDiv = document.getElementById('message')
+
+        if (email == '' && password == '') {
+            showMessage(`<div class='alert alert-danger' role='alert'>
+                    ❌ Fill in all inputs
+                </div>`)
+            return
+        }
+
+        showLoader('Signing you in...');
 
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
-                document.getElementById('message').innerHTML = `<div class="alert alert-success" role="alert">
+                showMessage(`<div class="alert alert-success" role="alert">
                                     ✅ Login successful! Redirecting to dashboard...
-                                </div>`
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html'
-                }, 1500)
+                                </div>`)
+                showLoader('Redirecting to dashboard...');
+                window.location.href = 'dashboard.html'
             })
             .catch((error) => {
+                hideLoader();
                 const errorCode = error.code;
                 console.log(errorCode);
 
-                if (email == '' && password == '') {
-                    messageDiv.innerHTML = `<div class='alert alert-danger' role='alert'>
-                            ❌ Fill in all inputs
-                        </div>`
-                } else if (errorCode == 'auth/invalid-credential') {
-                    messageDiv.innerHTML = `<div class="alert alert-danger" role="alert">
+                if (errorCode == 'auth/invalid-credential') {
+                    showMessage(`<div class="alert alert-danger" role="alert">
                                    ❌ Invalid email or password
-                                </div>`
+                                </div>`)
                 } else if (errorCode == 'auth/too-many-requests') {
-                    messageDiv.innerHTML = `<div class="alert alert-danger" role="alert">
+                    showMessage(`<div class="alert alert-danger" role="alert">
                     ❌ Too many login attempts. Please try again later
-                </div>`
+                </div>`)
                 } else if (errorCode == 'auth/invalid-email') {
-                    messageDiv.innerHTML = `<div class="alert alert-danger" role="alert">
+                    showMessage(`<div class="alert alert-danger" role="alert">
                     ❌ Invalid email format
-                </div>`
+                </div>`)
                 } else {
-                    messageDiv.innerHTML = `<div class="alert alert-danger" role="alert">
+                    showMessage(`<div class="alert alert-danger" role="alert">
                     ❌ Login failed: ${error.message}
-                </div>`
+                </div>`)
                 }
             })
     })
     document.getElementById('showPassword').addEventListener('click', () => {
         visibility = !visibility
-        if (visibility == false) {           
+        if (visibility == false) {
             document.getElementById('visiImg').src = './images/visibility.png'
             document.getElementById('password').type = 'text'
-        }else{
+        } else {
             document.getElementById('visiImg').src = './images/visibility_off.png'
             document.getElementById('password').type = 'password'
 

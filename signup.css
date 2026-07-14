@@ -12,6 +12,62 @@ body {
     height: 100vh;
 }
 
+.page-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(8, 15, 23, 0.52);
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.page-loader.is-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+}
+
+.page-loader-card {
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.2);
+    border-radius: 20px;
+    padding: 1.5rem 1.75rem;
+    min-width: 240px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.page-loader-spinner {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border: 3px solid rgba(25, 135, 84, 0.18);
+    border-top-color: #198754;
+    animation: loaderSpin 0.8s linear infinite;
+    flex: 0 0 auto;
+}
+
+.page-loader-text {
+    color: #0f172a;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+}
+
+@keyframes loaderSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 .signup-image-side {
     background: linear-gradient(135deg, rgba(25, 135, 84, 0.95) 0%, rgba(20, 108, 67, 0.95) 100%),
         url('images/roommates-with-delicious-food-medium-shot-min.jpg');
@@ -188,6 +244,59 @@ body {
     color: #5a6c7d;
     font-size: 0.9rem;
     margin-bottom: 2rem;
+}
+
+.google-btn {
+    width: 100%;
+    border: 2px solid #e8eaed;
+    background: #fff;
+    color: #1f2937;
+    border-radius: 10px;
+    padding: 0.8rem 1.25rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.google-btn i {
+    font-size: 1.05rem;
+    color: #ea4335;
+}
+
+.google-btn:hover {
+    border-color: #d0d7de;
+    box-shadow: 0 8px 24px rgba(17, 24, 39, 0.08);
+    transform: translateY(-1px);
+    background: #fafafa;
+}
+
+.google-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(234, 67, 53, 0.12);
+}
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1rem 0 1.1rem;
+    color: #94a3b8;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e8eaed;
 }
 
 .form-group {
@@ -377,6 +486,10 @@ body {
         font-size: 0.875rem;
     }
 
+    .auth-divider {
+        margin: 0.9rem 0 1rem;
+    }
+
     .form-group {
         margin-bottom: 0.95rem;
     }
@@ -390,12 +503,26 @@ body {
         margin-top: 0.75rem;
     }
 
+    .google-btn {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+
     .login-link {
         margin-top: 1.25rem;
     }
 }
 
 @media (max-width: 576px) {
+    .page-loader-card {
+        min-width: 210px;
+        padding: 1.25rem 1.35rem;
+    }
+
+    .page-loader-text {
+        font-size: 0.875rem;
+    }
+
     .signup-form-side {
         padding: 1.5rem 1.25rem;
     }
@@ -415,6 +542,17 @@ body {
     .signup-subtitle {
         font-size: 0.825rem;
         margin-bottom: 1.25rem;
+    }
+
+    .google-btn {
+        padding: 0.7rem 0.95rem;
+        font-size: 0.85rem;
+        gap: 0.6rem;
+    }
+
+    .auth-divider {
+        margin: 0.85rem 0 0.9rem;
+        font-size: 0.72rem;
     }
 
     .form-label {

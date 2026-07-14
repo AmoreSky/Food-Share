@@ -470,26 +470,6 @@
         </div>
     </div>
 
-    <!-- Mobile nav toggle -->
-    <script>
-        (function () {
-            var btn  = document.getElementById("hamburgerBtn");
-            var menu = document.querySelector(".nav-links");
-            if (!btn || !menu) return;
-            btn.addEventListener("click", function () {
-                var isOpen = menu.classList.toggle("open");
-                btn.classList.toggle("open", isOpen);
-                btn.setAttribute("aria-expanded", String(isOpen));
-            });
-            menu.querySelectorAll("a").forEach(function (a) {
-                a.addEventListener("click", function () {
-                    menu.classList.remove("open");
-                    btn.classList.remove("open");
-                    btn.setAttribute("aria-expanded", "false");
-                });
-            });
-        })();
-    </script>
 
     <!-- MOBILE BOTTOM NAV -->
     <nav class="bottom-nav" aria-label="Mobile navigation">
@@ -531,7 +511,7 @@
     document.getElementById('searchInput').addEventListener('input', (e) => {
         const query = e.target.value.toLowerCase().trim();
         renderFoodCards(
-            query ? allUserFoods.filter(f => f.food.food_name.toLowerCase().includes(query)) : allUserFoods
+            query ? allUserFoods.filter(f => f.food.food_name.toLowerCase().includes(query) || f.food.location.toLowerCase().includes(query)) : allUserFoods
         );
     });
 

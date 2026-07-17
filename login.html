@@ -128,30 +128,35 @@
     };
 
     document.getElementById('googleSignin').addEventListener('click', () => {
-        showLoader('Signing you in with Google...');
+        // Don't show loader until popup actually resolves — avoids stuck spinner
         signInWithPopup(auth, provider)
             .then((result) => {
+                // Popup succeeded — now show loader while we redirect
+                showLoader('Redirecting to dashboard...');
                 const user = result.user;
 
-                return setDoc(doc(db, 'users', user.uid), {
+                // Fire Firestore write in the background — don't await it
+                setDoc(doc(db, 'users', user.uid), {
                     username: user.displayName || user.email.split('@')[0],
                     email: user.email,
                     userId: user.uid,
                     authProvider: 'google'
-                }, { merge: true });
-            })
-            .then(() => {
-                showMessage(`<div class="alert alert-success" role="alert">
-                    🎉 Google sign-in successful! Redirecting to dashboard...
-                </div>`);
-                showLoader('Redirecting to dashboard...');
+                }, { merge: true }).catch(console.error);
+
+                // Redirect immediately without waiting for Firestore
                 window.location.href = 'dashboard.html';
             })
             .catch((error) => {
                 hideLoader();
+                // If the user simply closed the popup, don't show an error
+                if (error.code === 'auth/popup-closed-by-user' ||
+                    error.code === 'auth/cancelled-popup-request') {
+                    return;
+                }
                 showMessage(`<div class="alert alert-danger" role="alert">
                     ❌ Google sign-in failed: ${error.message}
                 </div>`);
+                console.log(error.message, error.code);
             });
     });
 

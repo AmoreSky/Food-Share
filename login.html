@@ -65,13 +65,36 @@
                             </button>
                         </div>
                         <div class="forgot-password">
-                            <a href="#">Forgot password?</a>
+                            <a href="#" id="forgotPasswordLink">Forgot password?</a>
                         </div>
                     </div>
                     <button type="button" class="btn btn-success login-btn" id="signin"><span>Sign In</span></button>
                 </form>
                 <div class="signup-link">
                     Don't have an account? <a href="signup.html">Create one</a>
+                </div>
+
+                <!-- ── Forgot Password Panel ── -->
+                <div id="resetPanel" class="reset-panel" aria-hidden="true">
+                    <button class="reset-back" id="resetBack" aria-label="Back to sign in">
+                        <i class="fas fa-arrow-left"></i> Back to Sign In
+                    </button>
+                    <div class="reset-icon">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <h4 class="reset-title">Reset Password</h4>
+                    <p class="reset-subtitle">Enter your email and we'll send you a link to reset your password.</p>
+                    <div id="resetMessage"></div>
+                    <div class="form-group" id="resetEmailGroup">
+                        <label for="resetEmail" class="form-label">Email address</label>
+                        <div class="input-icon-wrapper">
+                            <input type="email" class="form-control" id="resetEmail" placeholder="Enter your email">
+                            <i class="fas fa-envelope input-icon"></i>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-success login-btn" id="sendResetBtn">
+                        <span id="resetBtnText">Send Reset Link</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -80,7 +103,7 @@
 
 <script type="module">
     import { auth, db } from "./script.js";
-    import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+    import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
     import { doc, setDoc } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
     const provider = new GoogleAuthProvider();
@@ -189,6 +212,73 @@
 
         }
     })
+
+    // ── Forgot Password Panel ─────────────────────────────
+    const resetPanel     = document.getElementById('resetPanel');
+    const loginContainer = document.querySelector('.login-container');
+
+    function openResetPanel() {
+        resetPanel.classList.add('active');
+        resetPanel.setAttribute('aria-hidden', 'false');
+        document.getElementById('resetEmail').value = '';
+        document.getElementById('resetMessage').innerHTML = '';
+        document.getElementById('resetBtnText').textContent = 'Send Reset Link';
+        document.getElementById('sendResetBtn').disabled = false;
+        document.getElementById('resetEmailGroup').style.display = '';
+    }
+
+    function closeResetPanel() {
+        resetPanel.classList.remove('active');
+        resetPanel.setAttribute('aria-hidden', 'true');
+    }
+
+    document.getElementById('forgotPasswordLink').addEventListener('click', (e) => {
+        e.preventDefault();
+        openResetPanel();
+    });
+
+    document.getElementById('resetBack').addEventListener('click', closeResetPanel);
+
+    document.getElementById('sendResetBtn').addEventListener('click', async () => {
+        const email   = document.getElementById('resetEmail').value.trim();
+        const btn     = document.getElementById('sendResetBtn');
+        const btnText = document.getElementById('resetBtnText');
+        const msgDiv  = document.getElementById('resetMessage');
+
+        if (!email) {
+            msgDiv.innerHTML = `<div class="alert alert-danger" role="alert">❌ Please enter your email address.</div>`;
+            return;
+        }
+
+        btnText.textContent = 'Sending…';
+        btn.disabled = true;
+
+        try {
+            await sendPasswordResetEmail(auth, email);
+            // Hide the input — show only success state
+            document.getElementById('resetEmailGroup').style.display = 'none';
+            btn.style.display = 'none';
+            msgDiv.innerHTML = `
+                <div class="reset-success-state">
+                    <div class="reset-success-icon"><i class="fas fa-paper-plane"></i></div>
+                    <p class="reset-success-msg">Reset link sent! Check your inbox for <strong>${email}</strong> and follow the instructions.</p>
+                    <button class="btn btn-success login-btn" id="backAfterReset" style="margin-top:1rem;">Back to Sign In</button>
+                </div>`;
+            document.getElementById('backAfterReset').addEventListener('click', () => {
+                btn.style.display = '';
+                closeResetPanel();
+            });
+        } catch (err) {
+            btnText.textContent = 'Send Reset Link';
+            btn.disabled = false;
+            const code = err.code;
+            if (code === 'auth/user-not-found' || code === 'auth/invalid-email') {
+                msgDiv.innerHTML = `<div class="alert alert-danger" role="alert">❌ No account found with that email.</div>`;
+            } else {
+                msgDiv.innerHTML = `<div class="alert alert-danger" role="alert">❌ Something went wrong. Please try again.</div>`;
+            }
+        }
+    });
 </script>
 
 </html>

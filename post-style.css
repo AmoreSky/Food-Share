@@ -1,10 +1,10 @@
 /* ============================================================
-   Post Food Page Styles — Food Share
+   Post Food Page Styles — Food Share (Two-Column Layout)
    ============================================================ */
 
 /* ── Page shell ── */
-html, body {
-    height: 100%;
+html {
+    /* No fixed height — lets the page scroll naturally on any screen size */
 }
 
 body {
@@ -17,42 +17,97 @@ body {
 
 nav { flex-shrink: 0; }
 
-/* ── Page header ── */
+/* ── Page header (compact, above the card) ── */
 .post-page-header {
     text-align: center;
-    padding: 2.75rem 1rem 1.5rem;
+    padding: 1.5rem 1rem 0.5rem;
 }
 
 .post-page-header h1 {
-    font-size: 2.2rem;
+    font-size: 1.9rem;
     font-weight: 800;
     color: #197a3a;
     letter-spacing: -0.5px;
-    margin-bottom: 0.45rem;
+    margin-bottom: 0.3rem;
     line-height: 1.2;
 }
 
 .post-page-header p {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     color: #5a7a6a;
     margin: 0;
-    line-height: 1.6;
 }
 
-/* ── Form card ── */
-#form-group {
-    background: #ffffff;
-    border-radius: 18px;
-    max-width: 600px;
+/* ── Two-column layout wrapper ── */
+#post-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    max-width: 960px;
     width: calc(100% - 2rem);
-    margin: 0 auto 3rem;
-    padding: 2rem 2.25rem 2.25rem;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
+    /* auto top/bottom margin centers the card vertically when viewport is tall */
+    margin: auto;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 28px rgba(0, 0, 0, 0.08);
     border: 1px solid #e4ebe4;
-    position: relative;
+    overflow: hidden;
 }
 
-/* ── Image upload area ── */
+/* ── Left column: image upload ── */
+#image-col {
+    background: linear-gradient(160deg, #e8f5ee 0%, #d4edde 100%);
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem;
+    gap: 0.6rem;
+    border-right: 1px solid #d0e8d8;
+}
+
+#image-col .upload-field-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #3a6a4a;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+}
+
+/* Drop zone fills remaining height of left col */
+#image-col .upload-drop-zone {
+    flex: 1;
+    min-height: 0;
+}
+
+/* ── Right column: form card ── */
+#form-group {
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem 1.5rem;
+    position: relative;
+    /* No overflow-y — page scrolls globally, not just this column */
+}
+
+/* ── Form column header ── */
+.form-col-header {
+    margin-bottom: 1.25rem;
+}
+
+.form-col-header h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #197a3a;
+    letter-spacing: -0.3px;
+    margin: 0 0 0.2rem;
+    line-height: 1.2;
+}
+
+.form-col-header p {
+    font-size: 0.82rem;
+    color: #7a9a80;
+    margin: 0;
+}
+
+/* ── Image upload area (standalone, for single-col fallback) ── */
 .upload-label-wrap {
     margin-bottom: 1.5rem;
 }
@@ -134,14 +189,14 @@ nav { flex-shrink: 0; }
     display: block;
 }
 
-/* When preview is shown, dim the overlay text */
+/* When preview is shown, hide overlay text */
 .upload-drop-zone.has-image .upload-overlay {
     display: none;
 }
 
 /* ── Form fields ── */
 .form-field {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1rem;
 }
 
 .form-field label {
@@ -151,16 +206,16 @@ nav { flex-shrink: 0; }
     color: #666;
     letter-spacing: 0.6px;
     text-transform: uppercase;
-    margin-bottom: 0.45rem;
+    margin-bottom: 0.4rem;
 }
 
 .form-field input,
 .form-field textarea {
     width: 100%;
-    padding: 0.7rem 0.9rem;
+    padding: 0.65rem 0.9rem;
     border: 1.5px solid #dde8dd;
     border-radius: 10px;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     color: #1a2e1a;
     background: #fff;
     font-family: inherit;
@@ -231,35 +286,45 @@ nav { flex-shrink: 0; }
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    margin-bottom: 1.25rem;
-}
-
-/* Textarea */
-.form-field textarea {
-    resize: vertical;
-    min-height: 100px;
-    line-height: 1.6;
-}
-
-/* ── Feedback message box ── */
-#messageBox {
-    padding: 12px 16px;
-    border-radius: 9px;
-    font-weight: 600;
-    display: none;
-    font-size: 0.875rem;
-    animation: fadeIn 0.3s ease;
-    border-left: 4px solid;
+    gap: 0.85rem;
     margin-bottom: 1rem;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-4px); }
-    to   { opacity: 1; transform: translateY(0); }
+/* Textarea — shorter to avoid inner scroll */
+.form-field textarea {
+    resize: vertical;
+    min-height: 72px;
+    line-height: 1.6;
 }
 
-#messageBox.show    { display: block; }
+/* ── Feedback toast (fixed, always visible) ── */
+#messageBox {
+    position: fixed;
+    top: -80px;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 280px;
+    max-width: 480px;
+    width: max-content;
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: block;
+    opacity: 0;
+    border-left: 4px solid;
+    z-index: 9999;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    transition: top 0.35s cubic-bezier(0.34, 1.3, 0.64, 1), opacity 0.3s ease;
+    pointer-events: none;
+    text-align: center;
+}
+
+#messageBox.show {
+    top: 80px;
+    opacity: 1;
+}
+
 #messageBox.success { background: #d4edda; color: #155724; border-color: #28a745; }
 #messageBox.error   { background: #f8d7da; color: #721c24; border-color: #dc3545; }
 
@@ -274,14 +339,14 @@ nav { flex-shrink: 0; }
     color: #fff;
     border: none;
     border-radius: 12px;
-    padding: 0.9rem 1.5rem;
+    padding: 0.85rem 1.5rem;
     font-size: 1rem;
     font-weight: 800;
     cursor: pointer;
     letter-spacing: 0.2px;
     font-family: inherit;
     transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-    margin-top: 0.5rem;
+    margin-top: 0.25rem;
 }
 
 .btn-post-food:hover {
@@ -305,7 +370,7 @@ nav { flex-shrink: 0; }
     text-align: center;
     font-size: 0.75rem;
     color: #9ab5a0;
-    margin-top: 0.75rem;
+    margin-top: 0.6rem;
     line-height: 1.5;
 }
 
@@ -329,11 +394,10 @@ nav { flex-shrink: 0; }
     position: absolute;
     inset: 0;
     background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
-    border-radius: 18px;
+    border-radius: 0 20px 20px 0;
     gap: 1.5rem;
     z-index: 10;
     padding: 3rem 2rem;
-    border: 2px solid #b8dfc7;
 }
 
 #post-loader.hidden { display: none; }
@@ -357,10 +421,10 @@ nav { flex-shrink: 0; }
     text-align: center;
 }
 
-#form-content { display: block; }
+#form-content { display: flex; flex-direction: column; flex: 1; }
 #form-content.hidden { display: none; }
 
-/* ── Responsive ── */
+/* ── Responsive: collapse to single column on tablet/mobile ── */
 @media (max-width: 768px) {
     body {
         padding-bottom: 72px;
@@ -369,23 +433,40 @@ nav { flex-shrink: 0; }
     .bottom-nav {
         display: flex;
     }
+
+    #post-layout {
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+
+    #image-col {
+        border-right: none;
+        border-bottom: 1px solid #d0e8d8;
+        padding: 1.5rem;
+        min-height: 220px;
+    }
+
+    #image-col .upload-drop-zone {
+        flex: unset;
+        min-height: 190px;
+    }
+
+    #form-group {
+        padding: 1.5rem;
+    }
+
+    #post-loader {
+        border-radius: 0 0 20px 20px;
+    }
 }
 
 @media (max-width: 640px) {
-    #form-group {
-        padding: 1.5rem 1.25rem 1.75rem;
-        border-radius: 14px;
-    }
-
     .form-row {
         grid-template-columns: 1fr;
     }
 
     .post-page-header h1 {
-        font-size: 1.75rem;
-    }
-
-    .upload-drop-zone {
-        min-height: 180px;
+        font-size: 1.6rem;
     }
 }
+

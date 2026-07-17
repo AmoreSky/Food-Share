@@ -18,6 +18,9 @@
 
 <body>
 
+    <!-- Fixed toast notification -->
+    <div id="messageBox"></div>
+
     <!-- ═══════════════════════════════════════════
          NAVBAR
     ══════════════════════════════════════════════ -->
@@ -48,119 +51,115 @@
     </nav>
 
     <!-- ═══════════════════════════════════════════
-         PAGE HEADER
+         TWO-COLUMN LAYOUT WRAPPER
     ══════════════════════════════════════════════ -->
-    <div class="post-page-header">
-        <h1>Post Food</h1>
-        <p>Share your excess food with the community and help reduce waste.</p>
-    </div>
 
-    <!-- ═══════════════════════════════════════════
-         FORM CARD
-    ══════════════════════════════════════════════ -->
-    <div id="form-group">
+    <div id="post-layout">
 
-        <!-- Loading overlay -->
-        <div id="post-loader" class="hidden">
-            <div class="food-loader-icon">🍽️</div>
-            <p>Sharing your food…</p>
+        <!-- ── Left: Image upload column ── -->
+        <div id="image-col">
+            <span class="upload-field-label">Food Image</span>
+            <label class="upload-drop-zone" for="food_image" id="dropZone">
+                <!-- Overlay content (hidden when image is selected) -->
+                <div class="upload-overlay" id="uploadOverlay">
+                    <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg" width="52" height="52"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="12" y1="18" x2="12" y2="12"/>
+                        <polyline points="9 15 12 12 15 15"/>
+                    </svg>
+                    <strong>Upload Image</strong>
+                    <span>High resolution JPEG or PNG<br>Max 5 MB</span>
+                </div>
+                <!-- Preview image -->
+                <img id="image_preview" alt="Food preview">
+                <!-- Hidden file input -->
+                <input type="file" id="food_image" accept="image/*">
+            </label>
         </div>
 
-        <!-- Form content -->
-        <div id="form-content">
+        <!-- ── Right: Form fields column ── -->
+        <div id="form-group">
 
-            <!-- Feedback message -->
-            <div id="messageBox"></div>
+            <!-- Loading overlay -->
+            <div id="post-loader" class="hidden">
+                <div class="food-loader-icon">🍽️</div>
+                <p>Sharing your food…</p>
+            </div>
 
-            <!-- ── Image upload ── -->
-            <div class="upload-label-wrap">
-                <span class="upload-field-label">Food Image</span>
-                <label class="upload-drop-zone" for="food_image" id="dropZone">
-                    <!-- Overlay content (hidden when image is selected) -->
-                    <div class="upload-overlay" id="uploadOverlay">
-                        <!-- Upload icon -->
-                        <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg" width="48" height="48"
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                            <polyline points="14 2 14 8 20 8"/>
-                            <line x1="12" y1="18" x2="12" y2="12"/>
-                            <polyline points="9 15 12 12 15 15"/>
+            <!-- Form content -->
+            <div id="form-content">
+
+                <div class="form-col-header">
+                    <h2>Post Food</h2>
+                    <p>Fill in the details below to share with your community.</p>
+                </div>
+
+                <!-- ── Food Name ── -->
+                <div class="form-field">
+                    <label for="food_name">Food Name</label>
+                    <input type="text" id="food_name" placeholder="e.g., Fresh Organic Apples">
+                </div>
+
+                <!-- ── Quantity + Phone Number ── -->
+                <div class="form-row">
+                    <div class="form-field" style="margin-bottom:0;">
+                        <label for="quantity">Quantity</label>
+                        <div class="input-with-chip">
+                            <input type="text" id="quantity" placeholder="e.g., 5kg or 10 pieces">
+                            <span class="qty-chip">QTY</span>
+                        </div>
+                    </div>
+                    <div class="form-field" style="margin-bottom:0;">
+                        <label for="contact">Phone Number</label>
+                        <input type="tel" id="contact" placeholder="+234 ...">
+                    </div>
+                </div>
+
+                <!-- ── Location ── -->
+                <div class="form-field">
+                    <label for="location">Location</label>
+                    <div class="input-with-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
                         </svg>
-                        <strong>Upload Image</strong> <br>
-                        <span>High resolution JPEG or PNG (Max 5MB)</span>
-                    </div>
-
-                    <!-- Preview image (hidden until file chosen) -->
-                    <img id="image_preview" alt="Food preview">
-
-                    <!-- Real file input, transparent overlay -->
-                    <input type="file" id="food_image" accept="image/*">
-                </label>
-            </div>
-
-            <!-- ── Food Name ── -->
-            <div class="form-field">
-                <label for="food_name">Food Name</label>
-                <input type="text" id="food_name" placeholder="e.g., Fresh Organic Apples">
-            </div>
-
-            <!-- ── Quantity + Phone Number ── -->
-            <div class="form-row">
-                <div class="form-field" style="margin-bottom:0;">
-                    <label for="quantity">Quantity</label>
-                    <div class="input-with-chip">
-                        <input type="text" id="quantity" placeholder="e.g., 5kg or 10 pieces">
-                        <span class="qty-chip">QTY</span>
+                        <input type="text" id="location" placeholder="e.g., Bodija, Ibadan">
                     </div>
                 </div>
-                <div class="form-field" style="margin-bottom:0;">
-                    <label for="contact">Phone Number</label>
-                    <input type="tel" id="contact" placeholder="+234 ...">
-                </div>
-            </div>
 
-            <!-- ── Location ── -->
-            <div class="form-field">
-                <label for="location">Location</label>
-                <div class="input-with-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0z"/>
-                        <circle cx="12" cy="10" r="3"/>
+                <!-- ── Expiry Date ── -->
+                <div class="form-field">
+                    <label for="exp_date">Expiry Date</label>
+                    <input type="date" id="exp_date">
+                </div>
+
+                <!-- ── Additional Notes ── -->
+                <div class="form-field">
+                    <label for="notes">Additional Notes</label>
+                    <textarea id="notes" placeholder="e.g., Allergen information, pick-up instructions..."></textarea>
+                </div>
+
+                <!-- ── Submit ── -->
+                <button class="btn-post-food" id="post">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="5 3 19 12 5 21 5 3"/>
                     </svg>
-                    <input type="text" id="location" placeholder="e.g., Bodija, Ibadan">
-                </div>
-            </div>
+                    Post Food
+                </button>
 
-            <!-- ── Expiry Date ── -->
-            <div class="form-field">
-                <label for="exp_date">Expiry Date</label>
-                <input type="date" id="exp_date">
-            </div>
+                <p class="post-disclaimer">
+                    By posting, you agree to our <a href="#">Community Food Safety Guidelines</a>.
+                </p>
 
-            <!-- ── Additional Notes ── -->
-            <div class="form-field">
-                <label for="notes">Additional Notes</label>
-                <textarea id="notes" placeholder="e.g., Allergen information, pick-up instructions..."></textarea>
-            </div>
+            </div><!-- /form-content -->
+        </div><!-- /form-group -->
 
-            <!-- ── Submit ── -->
-            <button class="btn-post-food" id="post">
-                <!-- Arrow-right icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polygon points="5 3 19 12 5 21 5 3"/>
-                </svg>
-                Post Food
-            </button>
-
-            <p class="post-disclaimer">
-                By posting, you agree to our <a href="#">Community Food Safety Guidelines</a>.
-            </p>
-
-        </div><!-- /form-content -->
-    </div><!-- /form-group -->
+    </div><!-- /post-layout -->
 
     <!-- Mobile nav toggle -->
     <script>
@@ -215,9 +214,16 @@
     // ── Show feedback message ────────────────────────────────
     function showMessage(text, type) {
         const messageBox = document.getElementById('messageBox');
+        // Reset state cleanly before showing new message
+        messageBox.className = type;          // set type first (no 'show' yet)
         messageBox.textContent = text;
-        messageBox.className = `show ${type}`;
-        setTimeout(() => { messageBox.classList.remove('show'); }, 3500);
+        // Trigger reflow so the transition fires even on repeated calls
+        void messageBox.offsetWidth;
+        messageBox.classList.add('show');     // slide in
+        clearTimeout(messageBox._hideTimer);
+        messageBox._hideTimer = setTimeout(() => {
+            messageBox.classList.remove('show'); // slide out
+        }, 3500);
     }
 
     // ── Auth guard ───────────────────────────────────────────
@@ -279,6 +285,11 @@
         const location  = document.getElementById('location').value.trim();
         const contact   = document.getElementById('contact').value.trim();
         const notes     = document.getElementById('notes').value.trim();
+
+        if (!image.files || !image.files[0]) {
+            showMessage('Please upload a food image.', 'error');
+            return;
+        }
 
         if (!food_name || !quantity || !exp_date || !location || !contact) {
             showMessage('Please fill in all required fields.', 'error');

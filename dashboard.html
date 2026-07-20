@@ -276,11 +276,15 @@
                 }
             });
 
-            // Build available food list (excluding own posts)
+            // Build available food list (excluding own posts and expired foods)
             allFoods = [];
+            const today = new Date();
+            const todayStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+            
             querySnapshot.forEach((docSnap) => {
-                if (docSnap.data().status == 'Available' && docSnap.data().userId != user.uid) {
-                    allFoods.push({ id: docSnap.id, food: docSnap.data() });
+                const foodData = docSnap.data();
+                if (foodData.status == 'Available' && foodData.userId != user.uid && foodData.exp_date >= todayStr) {
+                    allFoods.push({ id: docSnap.id, food: foodData });
                 }
             });
 

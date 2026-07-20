@@ -235,9 +235,13 @@
             getDocs(collection(db, "users")).then(qs => {
                 qs.forEach(docSnap => {
                     if (docSnap.data().userId == user.uid) {
-                        const name = docSnap.data().username || '';
-                        document.getElementById('avatarInitial').textContent =
-                            name ? name.charAt(0).toUpperCase() : 'U';
+                        if (user.photoURL) {
+                            document.getElementById('userAvatar').innerHTML = `<img src="${user.photoURL}" alt="Profile picture" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                        } else {
+                            const name = docSnap.data().username || '';
+                            document.getElementById('avatarInitial').textContent =
+                                name ? name.charAt(0).toUpperCase() : 'U';
+                        }
                     }
                 });
             });

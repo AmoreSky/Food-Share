@@ -415,9 +415,12 @@
                         document.getElementById('welcomeUser').innerHTML =
                             `Welcome, <strong>${userName}</strong>!`;
 
-                        // Set avatar initial
-                        const initial = userName ? userName.charAt(0).toUpperCase() : 'U';
-                        document.getElementById('avatarInitial').textContent = initial;
+                        if (user.photoURL) {
+                            document.getElementById('userAvatar').innerHTML = `<img src="${user.photoURL}" alt="Profile picture" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                        } else {
+                            const initial = userName ? userName.charAt(0).toUpperCase() : 'U';
+                            document.getElementById('avatarInitial').textContent = initial;
+                        }
                     }
                 });
             });

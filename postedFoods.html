@@ -164,6 +164,12 @@
             border: 1px solid #ffcdd2;
         }
 
+        .badge-status.collected {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+
 
         .card-quote {
             border-left: 3px solid #197a3a;
@@ -565,6 +571,7 @@
         if (s === 'available' || s === 'active') return 'active';
         if (s === 'claimed') return 'claimed';
         if (s === 'expired') return 'expired';
+        if (s === 'collected') return 'collected';
         return 'pending';
     };
 
@@ -574,6 +581,7 @@
         if (s === 'available') return 'Active';
         if (s === 'claimed') return 'Claimed';
         if (s === 'expired') return 'Expired';
+        if (s === 'collected') return 'Collected ✓';
         return status.charAt(0).toUpperCase() + status.slice(1);
     };
 

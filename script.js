@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+import { getAuth, signOut, onAuthStateChanged, updateProfile, updateEmail } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 import { getFirestore, collection, doc, addDoc, getDocs, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -16,4 +16,4 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-export { auth, db, signOut, doc, addDoc, getDocs, collection, updateDoc, deleteDoc, onAuthStateChanged };
+export { auth, db, signOut, doc, addDoc, getDocs, collection, updateDoc, deleteDoc, onAuthStateChanged, updateProfile, updateEmail };

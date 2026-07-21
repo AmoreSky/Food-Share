@@ -201,15 +201,52 @@
             Post
         </a>
     </nav>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProfileLabel">Edit Profile</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="profileMessage" class="mb-3 text-center" style="font-weight: 500;"></div>
+                    <form id="editProfileForm">
+                        <div class="mb-3 text-center" id="profileImagePreviewContainer" style="display: none;">
+                            <img id="profileImagePreview" src="" alt="Preview" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editProfileImage" class="form-label">Profile Picture (Optional)</label>
+                            <input type="file" class="form-control" id="editProfileImage" accept="image/*">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editProfileName" class="form-label">Display Name</label>
+                            <input type="text" class="form-control" id="editProfileName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editProfileEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="editProfileEmail" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveProfileBtn">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 <script type="module">
-    import { auth, db, signOut, onAuthStateChanged, collection, addDoc, getDocs } from "./script.js";
+    import { auth, db, signOut, onAuthStateChanged, collection, addDoc, getDocs, updateProfile, updateEmail } from "./script.js";
 
     const CLOUDINARY_URL  = "https://api.cloudinary.com/v1_1/duxscpwuz/image/upload";
     const UPLOAD_PRESET   = "food_share";
 
     let user;
+    let userName = '';
 
     // ── Show feedback message ────────────────────────────────
     function showMessage(text, type) {
@@ -361,6 +398,121 @@
             showMessage('Failed to post food. Please try again.', 'error');
         }
     });
+
+    // ── Edit Profile ──────────────────────────────
+    document.getElementById('userAvatar').addEventListener('click', () => {
+        if (!user) return;
+        document.getElementById('editProfileName').value = userName || user.displayName || '';
+        document.getElementById('editProfileEmail').value = user.email || '';
+        document.getElementById('profileMessage').textContent = '';
+        
+        if (user.photoURL) {
+            document.getElementById('profileImagePreviewContainer').style.display = 'block';
+            document.getElementById('profileImagePreview').src = user.photoURL;
+        } else {
+            document.getElementById('profileImagePreviewContainer').style.display = 'none';
+            document.getElementById('profileImagePreview').src = '';
+        }
+        
+        new bootstrap.Modal(document.getElementById('editProfileModal')).show();
+    });
+
+    document.getElementById('editProfileImage').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            document.getElementById('profileImagePreviewContainer').style.display = 'block';
+            document.getElementById('profileImagePreview').src = URL.createObjectURL(file);
+        }
+    });
+
+    document.getElementById('saveProfileBtn').addEventListener('click', async () => {
+        if (!user) return;
+        const newName = document.getElementById('editProfileName').value.trim();
+        const newEmail = document.getElementById('editProfileEmail').value.trim();
+        const imageFile = document.getElementById('editProfileImage').files[0];
+        const messageEl = document.getElementById('profileMessage');
+        const saveBtn = document.getElementById('saveProfileBtn');
+        
+        if (!newName || !newEmail) {
+            messageEl.textContent = 'Name and Email are required.';
+            messageEl.style.color = '#c0392b';
+            return;
+        }
+        
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving...';
+        messageEl.textContent = '';
+        
+        try {
+            let photoURL = user.photoURL;
+            
+            if (imageFile) {
+                const formData = new FormData();
+                formData.append('file', imageFile);
+                formData.append('upload_preset', 'food_share');
+                
+                const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/duxscpwuz/image/upload";
+                
+                const response = await fetch(CLOUDINARY_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (data.secure_url) {
+                    photoURL = data.secure_url;
+                }
+            }
+            
+            // Update Firebase Auth profile
+            await updateProfile(user, {
+                displayName: newName,
+                photoURL: photoURL
+            });
+            
+            // Update Email if changed
+            if (newEmail !== user.email) {
+                await updateEmail(user, newEmail);
+            }
+            
+            // Update Firestore users collection
+            const querySnapshot = await getDocs(collection(db, "users"));
+            querySnapshot.forEach(async (docSnap) => {
+                if (docSnap.data().userId == user.uid) {
+                    await updateDoc(docSnap.ref, {
+                        username: newName
+                    });
+                }
+            });
+            
+            // Update UI
+            userName = newName;
+            if (photoURL) {
+                document.getElementById('userAvatar').innerHTML = `<img src="${photoURL}" alt="Profile picture" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+            } else {
+                document.getElementById('userAvatar').innerHTML = `<span id="avatarInitial">${newName.charAt(0).toUpperCase()}</span>`;
+            }
+            
+            const welcomeUserEl = document.getElementById('welcomeUser');
+            if (welcomeUserEl) {
+                welcomeUserEl.innerHTML = `Welcome, <strong>${newName}</strong>!`;
+            }
+            
+            bootstrap.Modal.getInstance(document.getElementById('editProfileModal')).hide();
+            
+        } catch (error) {
+            console.error('Error updating profile:', error);
+            messageEl.style.color = '#c0392b';
+            if (error.code === 'auth/requires-recent-login') {
+                messageEl.textContent = 'Please log out and log back in to change your email.';
+            } else {
+                messageEl.textContent = 'Error updating profile. Please try again.';
+            }
+        } finally {
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Save Changes';
+        }
+    });
+
 </script>
 
 </html>

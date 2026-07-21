@@ -265,8 +265,18 @@
             // Release expired claims
             querySnapshot.forEach(async (docSnap) => {
                 const food = docSnap.data();
-                if (food.status == 'claimed') {
-                    if ((now - food.claimedAt.toMillis()) > CLAIM_DURATION) {
+                if (food.status && food.status.toLowerCase() === 'claimed') {
+                    let isExpired = false;
+                    if (food.claimedAt) {
+                        const claimMillis = typeof food.claimedAt.toMillis === 'function' ? food.claimedAt.toMillis() : new Date(food.claimedAt).getTime();
+                        if ((now - claimMillis) > CLAIM_DURATION) {
+                            isExpired = true;
+                        }
+                    } else {
+                        isExpired = true; // No timestamp means it's an old stuck claim
+                    }
+                    
+                    if (isExpired) {
                         await updateDoc(docSnap.ref, {
                             status: 'Available',
                             claimedBy: null,

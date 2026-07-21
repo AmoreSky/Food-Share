@@ -570,7 +570,12 @@
             
             const statusClass = getStatusClass(currentStatus);
             const statusLabel = getStatusLabel(currentStatus);
-            const qtyText = food.quantity ? `${food.quantity} Available` : '';
+            
+            let qtyText = '';
+            if (currentStatus.toLowerCase() !== 'expired' && currentStatus.toLowerCase() !== 'claimed' && food.quantity) {
+                qtyText = `${food.quantity} Available`;
+            }
+            
             const notesText = food.notes ? `"${food.notes}"` : '';
 
             foodHTML += `
@@ -665,8 +670,18 @@
                 let food = docSnap.data();
 
                 // Release expired claims
-                if (food.status === 'claimed' && food.claimedAt) {
-                    if ((now - food.claimedAt.toMillis()) > CLAIM_DURATION) {
+                if (food.status && food.status.toLowerCase() === 'claimed') {
+                    let isExpired = false;
+                    if (food.claimedAt) {
+                        const claimMillis = typeof food.claimedAt.toMillis === 'function' ? food.claimedAt.toMillis() : new Date(food.claimedAt).getTime();
+                        if ((now - claimMillis) > CLAIM_DURATION) {
+                            isExpired = true;
+                        }
+                    } else {
+                        isExpired = true; // No timestamp means it's an old stuck claim
+                    }
+                    
+                    if (isExpired) {
                         updateDoc(docSnap.ref, {
                             status: 'Available',
                             claimedBy: null,
@@ -742,6 +757,18 @@
         const updatedNotes    = document.getElementById('editNotes').value;
         const updatedContact  = document.getElementById('editContact').value;
         const updatedLocation = document.getElementById('editLoc').value;
+        if (!updateFoodName || !updatedQuantity || !updatedExpDate || !updatedLocation || !updatedContact) {
+            showMessage('Please fill in all required fields.', '#c0392b');
+            return;
+        }
+
+        const today = new Date();
+        const todayStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+        
+        if (updatedExpDate < todayStr) {
+            showMessage('Expiration date cannot be in the past.', '#c0392b');
+            return;
+        }
 
         try {
             await updateDoc(doc(db, "food", foodId), {
